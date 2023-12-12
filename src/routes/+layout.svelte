@@ -3,11 +3,16 @@
     import "carbon-components-svelte/css/g100.css";
     import Loader from "$lib/components/Loader.svelte";
 
-    export let data: { loading: boolean};
-    
+    export let loading = true;
+
+    setTimeout(() => {
+        loading = false;
+    }, 200);
+
+
 </script>
 <!-- if loading show Loader else slot -->
-{#if data?.loading ?? true}
+{#if loading ?? true}
     <Loader />
 {:else}
     <slot />
