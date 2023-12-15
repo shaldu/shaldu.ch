@@ -7,7 +7,11 @@ const config = {
 	kit: {
 		adapter: adapter({
 			out: "dist",
-		})
+		}),
+		alias: {
+			$components: "./src/components",
+			$db: "./src/db",
+		},
 	},
 	preprocess: sveltePreprocess()
 
