@@ -7,8 +7,7 @@
 	
 </script>
 
-<h1>SvelteKit Auth Example</h1>
-<p>
+<div>
 	{#if $sessionStore }
 		{#if $sessionStore.user?.image}
 			<picture>
@@ -24,4 +23,4 @@
 		<span class="notSignedInText">You are not signed in</span>
 		<button on:click={() => signIn('github')}>Sign In with GitHub</button>
 	{/if}
-</p>
+	</div>

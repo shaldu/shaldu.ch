@@ -1,15 +1,18 @@
-import { start_prisma } from "$db/db";
 import { SvelteKitAuth } from '@auth/sveltekit';
 import GitHub from '@auth/sveltekit/providers/github';
 import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
 
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { prisma } from '$db/db';
+import type { Session } from '@auth/core/types';
+import type { JWT } from '@auth/core/jwt';
+import type { Account } from '@prisma/client';
 
-start_prisma();
 
-async function authorization({ event, resolve }) {
+async function authorization({ event, resolve }: { event: any; resolve: any }) {
 	//list of protected routes
+
 	if (event.url.pathname.startsWith('/api/auth')) {
 		const session = await event.locals.getSession();
 
@@ -28,7 +31,47 @@ async function authorization({ event, resolve }) {
 // And returning a handle which gets passed to the next function
 export const handle: Handle = sequence(
 	SvelteKitAuth({
-		providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })]
+		providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+		callbacks: {
+			signIn: async ({ user }) => {
+
+				const usr = await prisma.account.findFirst({
+					where: {
+						githubId: user.id,
+					}
+				});
+				if (!usr) {
+					await prisma.account.create({
+						data: {
+							githubId: user.id,
+						}
+					});
+				}
+
+				return true;
+			},
+			jwt: async ({ token, user }) => {
+				if (!user) return token;
+
+				token.id = user.id;
+				return token;
+			},
+			session: async ({ session, token }:{session: Session,  token: JWT }) => {
+
+				const usr = await prisma.account.findFirst({
+					where: {
+						githubId: token.githubId as string,
+					}
+				});
+				if (!usr) {
+					throw new Error('Invalid session');
+				}
+				//@ts-expect-error
+				session.account = usr;
+				return session;
+			}
+		}
 	}),
-	authorization
+	authorization,
+
 );
