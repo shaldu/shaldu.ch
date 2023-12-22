@@ -4,6 +4,8 @@
 	import Loader from '$lib/components/Loader.svelte';
 	import { sessionStore } from '$lib/stores';
 	import type { Session } from '@auth/core/types';
+	import Header from '$lib/components/Header.svelte';
+	import '$scss/index.scss';
 
 	export let loading = true;
 	export let data;
@@ -19,5 +21,10 @@
 {#if loading ?? true}
 	<Loader />
 {:else}
-	<slot />
+	<header>
+		<Header/>
+	</header>
+	<main>
+		<slot />
+	</main>
 {/if}

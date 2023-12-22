@@ -11,6 +11,7 @@ const config = {
 		alias: {
 			$components: "./src/components",
 			$db: "./src/db",
+			$scss: "./src/scss",
 		},
 	},
 	preprocess: sveltePreprocess()
