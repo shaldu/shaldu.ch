@@ -1,4 +1,4 @@
-<script lamg="ts">
+<script lang="ts">
 	import { sessionStore } from '$lib/stores';
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import {
@@ -11,23 +11,42 @@
 
 	let isSideNavOpen = false;
 
-	$: sessionStore;
+	function redirectHome() {
+		window.location.href = '/';
+	}
+
 </script>
 
-<Header company="" platformName="Shaldu" bind:isSideNavOpen>
+<Header on:click={redirectHome} bind:isSideNavOpen>
+	<span slot="platform">☁︎</span>
 	<svelte:fragment slot="skip-to-content">
 		<SkipToContent />
 	</svelte:fragment>
-	<HeaderNav class="justify-content-end d-flex w-100 login-menu">
+	<HeaderNav class="w-100 main-nivagtion-bar">
 		{#if $sessionStore?.user}
-			<!-- <HeaderNavItem href="/dashboard" text="Dashboard" />
-			<HeaderNavItem href="/profile" text="Profile" /> -->
-			<HeaderNavItem href="" on:click={() => signOut()} text="Logout" />
+			<div class="main-navigation-bar-left">
+				<HeaderNavItem href="/dashboard" text="Dashboard" />
+			</div>
+			<div class="main-navigation-bar-right">
+				{#if $sessionStore?.user?.image}
+					<HeaderNavItem class="mini-user-profile-wrapper" href="/profile">
+						<div class="mini-user-profile">
+							<span><strong>{$sessionStore?.user?.name}</strong></span>
+							<img src={$sessionStore?.user?.image} alt="avatar" class="avatar" />
+						</div>
+					</HeaderNavItem>
+				{/if}
+
+				<HeaderNavItem href="" on:click={() => signOut()} text="Logout" />
+			</div>
 		{:else}
-			<HeaderNavMenu text="Login">
-				<HeaderNavItem on:click={() => signIn('github')} text="Sign In with Github" />
-				<HeaderNavItem href="/" text="Sign In with Google" />
-			</HeaderNavMenu>
+			<div class="main-navigation-bar-left"></div>
+			<div class="main-navigation-bar-right">
+				<HeaderNavMenu text="Login">
+					<HeaderNavItem on:click={() => signIn('github')} text="Sign In with Github" />
+					<HeaderNavItem href="/" text="Sign In with Google" />
+				</HeaderNavMenu>
+			</div>
 		{/if}
 	</HeaderNav>
 </Header>

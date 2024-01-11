@@ -41,9 +41,16 @@ export const handle: Handle = sequence(
 					}
 				});
 				if (!usr) {
-					await prisma.account.create({
+					const newUsr = await prisma.account.create({
 						data: {
 							githubId: user.id,
+						}
+					});
+					//also create a profile
+					await prisma.profile.create({
+						data: {
+							accountId: newUsr.id,
+							username: user?.name ?? 'Anonymous',
 						}
 					});
 				}
@@ -56,18 +63,28 @@ export const handle: Handle = sequence(
 				token.id = user.id;
 				return token;
 			},
-			session: async ({ session, token }:{session: Session,  token: JWT }) => {
+			session: async ({ session, token }: { session: Session, token: JWT }) => {
 
 				const usr = await prisma.account.findFirst({
 					where: {
 						githubId: token.githubId as string,
-					}
+					},
+					include: {
+						profile: {
+							include: {
+									characters: {
+										select: {
+											id: true,
+										}
+									}
+								}
+							}
+						},
 				});
-				if (!usr) {
-					throw new Error('Invalid session');
+				if (usr) {
+					//@ts-expect-error
+					session.account = usr;
 				}
-				//@ts-expect-error
-				session.account = usr;
 				return session;
 			}
 		}

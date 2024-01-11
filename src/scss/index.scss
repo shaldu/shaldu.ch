@@ -1,4 +1,63 @@
-.login-menu .bx--header__menu {
-    right: 0 !important;
-    left: auto !important;
+.main-nivagtion-bar {
+
+    > ul {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        > div {
+            height: 100%;
+            display: flex;
+        }
+    }
+
+    .bx--header__menu {
+        right: 0 !important;
+        left: auto !important;
+    }
+
+}
+
+.mini-user-profile{
+    img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-left: 10px;
+    }
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+header {
+    position: relative !important;
+    margin-bottom: 40px;
+}
+
+.card {
+    border-radius: 2px;
+    background-color: #272727;
+    color: rgb(198, 198, 198);
+    padding: 10px;
+    &.grey {
+        background-color: #272727;
+    }
+    &.light {
+        background-color: #3a3a3a;
+        color: #fff;
+    }
+}
+
+.bx--btn--field {
+    padding: calc(0.675rem - 3px) 12px calc(0.675rem - 3px) 12px;
+}
+
+.bx--slider-container {
+    width: 100%;
 }

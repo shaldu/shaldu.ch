@@ -3,8 +3,6 @@
 	import { page } from '$app/stores';
 	import { sessionStore } from '$lib/stores';
 
-	$: sessionStore
-	
 </script>
 
 <div>
