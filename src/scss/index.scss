@@ -1,3 +1,4 @@
+$header-height: 50px;
 .main-nivagtion-bar {
 
     > ul {
@@ -37,7 +38,7 @@
 
 header {
     position: relative !important;
-    margin-bottom: 40px;
+    height: $header-height;
 }
 
 .card {
@@ -52,6 +53,10 @@ header {
         background-color: #3a3a3a;
         color: #fff;
     }
+    &.transparent {
+        background-color: transparent;
+        color: #fff;
+    }
 }
 
 .bx--btn--field {
@@ -60,4 +65,24 @@ header {
 
 .bx--slider-container {
     width: 100%;
+}
+
+.collection {
+    height: calc(100vh - $header-height);
+
+    .card-body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+}
+
+.btn-inline {
+    
+    &:hover {
+        cursor: pointer;
+    }
 }

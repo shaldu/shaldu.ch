@@ -46,13 +46,7 @@ export const handle: Handle = sequence(
 							githubId: user.id,
 						}
 					});
-					//also create a profile
-					await prisma.profile.create({
-						data: {
-							accountId: newUsr.id,
-							username: user?.name ?? 'Anonymous',
-						}
-					});
+				
 				}
 
 				return true;
@@ -69,21 +63,21 @@ export const handle: Handle = sequence(
 					where: {
 						githubId: token.githubId as string,
 					},
-					include: {
-						profile: {
-							include: {
-									characters: {
-										select: {
-											id: true,
-										}
-									}
-								}
-							}
-						},
+					// include: {
+					// 	profile: {
+					// 		include: {
+					// 				characters: {
+					// 					select: {
+					// 						id: true,
+					// 					}
+					// 				}
+					// 			}
+					// 		}
+					// 	},
 				});
 				if (usr) {
-					//@ts-expect-error
-					session.account = usr;
+					// session.account = usr;
+					//set more values here
 				}
 				return session;
 			}

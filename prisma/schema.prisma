@@ -13,29 +13,54 @@ datasource db {
 model Account {
   id        String   @id @default(uuid())
   githubId  String   @unique
-  profile   Profile? 
+  googleId  String   @unique
+  learnCollection LearnCollection[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Profile {
-  id          String    @id @default(uuid())
-  accountId   String    @unique
-  account     Account   @relation(fields: [accountId], references: [id]) 
-  username    String
-  characters  Character[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-
-model Character {
+model LearnCollection {
   id        String   @id @default(uuid())
-  profileId String
-  profile   Profile  @relation(fields: [profileId], references: [id])
   name      String
-  level     Int     @default(1)
-  currentExp Int    @default(0)
-  maxExp    Int    @default(100)
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id])
+  pdfFile   PdfFile[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PdfFile {
+  id        String   @id @default(uuid())
+  name      String
+  path      String
+  progress  Float
+  learnCollectionId String
+  learnCollection   LearnCollection @relation(fields: [learnCollectionId], references: [id])
+  bookmarks Bookmarks[]
+  wordCollection WordCollection[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Bookmarks {
+  id            String   @id @default(uuid())
+  name          String
+  link          String
+  description   String
+  page          Int
+  pdfFileId     String
+  pdfFile       PdfFile  @relation(fields: [pdfFileId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model WordCollection {
+  id          String   @id @default(uuid())
+  name        String
+  definition  String
+  favorite    Boolean
+  pdfFileId   String
+  pdfFile     PdfFile  @relation(fields: [pdfFileId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

@@ -14,7 +14,7 @@
 	
 	setTimeout(() => {
 		loading = false;
-	}, 200);
+	}, 100);
 </script>
 
 <!-- if loading show Loader else slot -->

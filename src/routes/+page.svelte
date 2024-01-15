@@ -1,24 +1,26 @@
 <script lang="ts">
 	import { sessionStore } from '$lib/stores';
-	import CharacterCreation from '$lib/components/CharacterCreation.svelte';
+	import { Tabs, Tab, TabContent } from 'carbon-components-svelte';
 	import type { ActionData } from './$types';
+	import Collections from '$lib/components/Collections.svelte';
 
 	export let form: ActionData;
-
 </script>
 
-<div class="container mb-5">
-	<div class="row justify-content-center">
-		{#if $sessionStore?.user}
-			{#if $sessionStore?.account?.profile.characters?.length > 0}
-				<h1>Character already exists</h1>
-			{:else}
-				<form action="?/createCharacter" method="POST">
-					<CharacterCreation />
-				</form>				
-			{/if}
-		{:else}
-			<h1>Please Login to literally do anything</h1>
-		{/if}
-	</div>
+<div>
+	{#if $sessionStore?.user}
+		<div class="container-fluid g-0">
+			<div class="row g-0">
+				<div class="col-12 col-md-4 col-lg-2">
+					<Collections />
+				</div>
+			</div>
+		</div>
+	{:else}
+		<div class="container">
+			<div class="row justify-content-center">
+				<h1>Please Login to literally do anything</h1>
+			</div>
+		</div>
+	{/if}
 </div>
