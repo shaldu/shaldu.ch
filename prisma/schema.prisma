@@ -13,7 +13,7 @@ datasource db {
 model Account {
   id        String   @id @default(uuid())
   githubId  String   @unique
-  googleId  String   @unique
+
   learnCollection LearnCollection[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
