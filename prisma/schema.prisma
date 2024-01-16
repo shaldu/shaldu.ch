@@ -13,7 +13,6 @@ datasource db {
 model Account {
   id        String   @id @default(uuid())
   githubId  String   @unique
-
   learnCollection LearnCollection[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -21,7 +20,7 @@ model Account {
 
 model LearnCollection {
   id        String   @id @default(uuid())
-  name      String
+  title      String
   accountId String
   account   Account  @relation(fields: [accountId], references: [id])
   pdfFile   PdfFile[]
@@ -31,7 +30,7 @@ model LearnCollection {
 
 model PdfFile {
   id        String   @id @default(uuid())
-  name      String
+  title      String
   path      String
   progress  Float
   learnCollectionId String
@@ -44,7 +43,7 @@ model PdfFile {
 
 model Bookmarks {
   id            String   @id @default(uuid())
-  name          String
+  title          String
   link          String
   description   String
   page          Int
@@ -56,7 +55,7 @@ model Bookmarks {
 
 model WordCollection {
   id          String   @id @default(uuid())
-  name        String
+  title        String
   definition  String
   favorite    Boolean
   pdfFileId   String

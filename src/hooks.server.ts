@@ -8,6 +8,7 @@ import { prisma } from '$db/db';
 import type { Session } from '@auth/core/types';
 import type { JWT } from '@auth/core/jwt';
 import type { Account } from '@prisma/client';
+import type { CustomSession } from '$lib/stores';
 
 
 async function authorization({ event, resolve }: { event: any; resolve: any }) {
@@ -76,8 +77,9 @@ export const handle: Handle = sequence(
 					// 	},
 				});
 				if (usr) {
-					// session.account = usr;
-					//set more values here
+					//@ts-ignore
+					session.account = usr
+					
 				}
 				return session;
 			}

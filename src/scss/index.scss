@@ -87,3 +87,22 @@ header {
         cursor: pointer;
     }
 }
+
+.toast-notification {
+    position: fixed;
+    right: 0;
+    top: calc(0 + #{$header-height});
+    transition: right 0.5s ease-in-out;
+
+    &.hide {
+        right: -100%;
+    }
+}
+
+.bx--toast-notification__details {
+    margin-right: 0rem !important;
+}
+
+.bx--toast-notification__caption {
+    font-size: 0.775rem !important;
+}

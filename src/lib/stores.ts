@@ -1,8 +1,12 @@
 import type { Session } from "@auth/core/types";
 import { writable, readable, type Writable } from "svelte/store";
 
-type CustomSession = Session & {
-
+export type CustomSession = Session & {
+    account: {
+        id: string;
+        githubId: string;
+        
+    };
 }
 
 export const sessionStore: Writable<CustomSession | null> = writable();

@@ -1,9 +1,9 @@
 <script lang="ts">
+   import { Button } from 'carbon-components-svelte';
+
    export let title = "undefined";
    export let selection: Function;
-   export let id = 0;
+   export let id = '';
 </script>
 
-<button class="btn btn-secondary w-100 mt-4" on:click={selection(id)}>
-    <span>{title}</span>
-</button>
+<Button kind={'secondary'} class="mt-4 w-100" on:click={selection(id)}>{title}</Button>
