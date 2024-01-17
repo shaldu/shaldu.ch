@@ -56,7 +56,7 @@
 		</div>
 		<div class="container-fluid g-0">
 			<div class="row g-0">
-				<div class="col-12 col-md-4 col-lg-2">
+				<div class="left-side-panel col-12 col-md-2">
 					<form action="?/createCollection" method="post" bind:this={formElmRef}>
 						<Collections createFormElm={formElmRef} />
 					</form>

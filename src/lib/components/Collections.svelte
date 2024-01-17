@@ -1,16 +1,17 @@
 <script lang="ts">
 	import SingleCollection from '$lib/components/SingleCollection.svelte';
 	import ArrowLeft from 'carbon-icons-svelte/lib/ArrowLeft.svelte';
-	import { Modal, Button, TextInput } from 'carbon-components-svelte';
-
+	import { Modal, Button, TextInput, SkeletonText } from 'carbon-components-svelte';
+	import Add from "carbon-icons-svelte/lib/Add.svelte";
+	
 	let open = false;
 	export let createFormElm: HTMLFormElement;
 
 	fetchCollections();
 
 	let selectedCollection: { id: string; title: string } | null | undefined = null;
-	let collections: { id: string; title: string }[] | null | undefined = null;
-	
+	let collections: { id: string; title: string }[] | null | undefined = undefined;
+
 	//get the url parameters
 	const urlParams = new URLSearchParams(window.location.search);
 	const collectionId = urlParams.get('collection');
@@ -25,7 +26,7 @@
 			selectedCollection = null;
 		} else {
 			//find the collection with the id
-			if (collections == null) return;
+			if (collections == null || collections == undefined) return;
 			selectedCollection = collections.find((collection) => collection.id == id);
 		}
 		//set the selected collection as a parameter in the url
@@ -56,21 +57,23 @@
 	<div class="collection card">
 		<div class="card-body">
 			<div class="w-100">
-				<h5 class="card-title">Collections</h5>
+				<h5 class="card-title mb-4">Collections</h5>
 				<div class="collection-holder w-100">
-					{#if collections == null}
-						<div class="spinner-border text-primary" role="status">
-							<span class="visually-hidden">Loading...</span>
-						</div>
-					{:else}
+					{#if collections != null && collections.length > 0}
 						{#each collections as collection, index}
-						<SingleCollection title={collection.title} id={collection.id} selection={selectedId} />
-					{/each}
+							<SingleCollection title={collection.title} id={collection.id} selection={selectedId} />
+						{/each}
+					{:else if collections == undefined }
+						<SkeletonText heading />
+					{:else}
+					<div class="text-center">						
+						<p>You don't have any collections yet.</p>
+					</div>
 					{/if}
 
 				</div>
 			</div>
-			<Button on:click={() => (open = true)}>Create collection</Button>
+			<Button class="w-100" icon={Add} on:click={() => (open = true)}>Create collection</Button>
 			<Modal
 				bind:open
 				modalHeading="Create collection"

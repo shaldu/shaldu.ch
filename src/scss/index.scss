@@ -1,7 +1,41 @@
+$screen-sm-min: 576px;
+$screen-md-min: 768px;
+$screen-lg-min: 992px;
+$screen-xl-min: 1200px;
+
+// Small devices
+@mixin sm {
+    @media (min-width: #{$screen-sm-min}) {
+        @content;
+    }
+}
+
+// Medium devices
+@mixin md {
+    @media (min-width: #{$screen-md-min}) {
+        @content;
+    }
+}
+
+// Large devices
+@mixin lg {
+    @media (min-width: #{$screen-lg-min}) {
+        @content;
+    }
+}
+
+// Extra large devices
+@mixin xl {
+    @media (min-width: #{$screen-xl-min}) {
+        @content;
+    }
+}
+
 $header-height: 50px;
+
 .main-nivagtion-bar {
 
-    > ul {
+    >ul {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -9,7 +43,7 @@ $header-height: 50px;
         margin: 0;
         list-style: none;
 
-        > div {
+        >div {
             height: 100%;
             display: flex;
         }
@@ -22,18 +56,19 @@ $header-height: 50px;
 
 }
 
-.mini-user-profile{
+.mini-user-profile {
     img {
         width: 30px;
         height: 30px;
         border-radius: 50%;
         margin-left: 10px;
     }
+
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
+
 }
 
 header {
@@ -46,13 +81,16 @@ header {
     background-color: #272727;
     color: rgb(198, 198, 198);
     padding: 10px;
+
     &.grey {
         background-color: #272727;
     }
+
     &.light {
         background-color: #3a3a3a;
         color: #fff;
     }
+
     &.transparent {
         background-color: transparent;
         border-color: transparent;
@@ -82,7 +120,7 @@ header {
 }
 
 .btn-inline {
-    
+
     &:hover {
         cursor: pointer;
     }
@@ -105,4 +143,21 @@ header {
 
 .bx--toast-notification__caption {
     font-size: 0.775rem !important;
+}
+
+.w-100 {
+    
+    >button {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+.left-side-panel {
+    min-width: 350px;
+
+    @include sm {
+        max-width: 350px;
+    }
+
 }
