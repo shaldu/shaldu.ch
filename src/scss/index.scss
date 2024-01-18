@@ -161,3 +161,20 @@ header {
     }
 
 }
+
+.back-to {
+    flex-direction: row-reverse;
+    position: absolute;
+    top: -22px;
+    svg {
+        position: initial !important;
+    }
+}
+
+.collection-holder {
+    position: absolute;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100% - 100px);
+}

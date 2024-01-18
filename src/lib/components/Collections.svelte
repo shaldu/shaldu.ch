@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { collectionIdStore } from '$lib/stores';
 	import SingleCollection from '$lib/components/SingleCollection.svelte';
 	import ArrowLeft from 'carbon-icons-svelte/lib/ArrowLeft.svelte';
 	import { Modal, Button, TextInput, SkeletonText } from 'carbon-components-svelte';
@@ -14,11 +15,10 @@
 
 	//get the url parameters
 	const urlParams = new URLSearchParams(window.location.search);
-	const collectionId = urlParams.get('collection');
+	const tempCollectionId = urlParams.get('collection');
 
-	//if the url has a collection parameter, set the selected collection
-	if (collectionId != null) {
-		
+	if (tempCollectionId != null && tempCollectionId != undefined && tempCollectionId != '') {
+		$collectionIdStore = tempCollectionId;
 	}
 
 	function selectedId(id: string | null) {
@@ -31,6 +31,7 @@
 		}
 		//set the selected collection as a parameter in the url
 		history.pushState(null, '', `?collection=${id}`);
+		$collectionIdStore = selectedCollection?.id;
 	}
 
 	function fetchCollections() {
@@ -56,8 +57,8 @@
 {#if selectedCollection == null}
 	<div class="collection card">
 		<div class="card-body">
-			<div class="w-100">
-				<h5 class="card-title mb-4">Collections</h5>
+			<div class="w-100 h-100 position-relative">
+				<h5 class="card-title mb-4 mt-4">Collections</h5>
 				<div class="collection-holder w-100">
 					{#if collections != null && collections.length > 0}
 						{#each collections as collection, index}
@@ -97,24 +98,6 @@
 					/>
 				</div>
 			</Modal>
-		</div>
-	</div>
-{:else}
-	<div class="collection card transparent">
-		<div class="card-body">
-			<div class="w-100">
-				<div class="mb-4">
-					<span
-						class="btn-inline"
-						on:click={() => {
-							selectedCollection = null;
-						}}><ArrowLeft /> Back to Collections</span
-					>
-				</div>
-				<div>
-					<h5 class="card-title">Collection {selectedCollection.title}</h5>
-				</div>
-			</div>
 		</div>
 	</div>
 {/if}
