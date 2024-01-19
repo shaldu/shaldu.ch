@@ -1,10 +1,26 @@
 <script lang="ts">
-	import { sessionStore, collectionIdStore } from '$lib/stores';
+	import { sessionStore, collectionIdStore, pdfFileIdsStore } from '$lib/stores';
 	import { Tabs, Tab, TabContent, ToastNotification } from 'carbon-components-svelte';
 	import type { ActionData } from './$types';
 	import Collections from '$lib/components/Collections.svelte';
 	import FileCollection from '$lib/components/FileCollection.svelte';
 	import { enhance } from '$app/forms';
+	import { Pdf } from 'carbon-icons-svelte';
+	import PdfViewer from '$lib/components/PDFViewer.svelte';
+
+	//get the url parameters
+	const urlParams = new URLSearchParams(window.location.search);
+	const tempCollectionId = urlParams.get('collection');
+
+	if (tempCollectionId != null && tempCollectionId != undefined && tempCollectionId != '') {
+		$collectionIdStore = tempCollectionId;
+	}
+
+	const tempFileId = urlParams.get('file');
+
+	if (tempFileId != null && tempFileId != undefined && tempFileId != '') {
+		$pdfFileIdsStore = tempFileId;
+	}
 
 	export let form: ActionData;
 
@@ -15,13 +31,11 @@
 	let caption = 'Something went wrong.';
 
 	if (form !== null) {
-
 		if (form.body.collectionId != null && form.body.collectionId != '') {
 			collectionIdStore.set(form.body.collectionId);
 			//set url parameter
 			history.pushState(null, '', `?collection=${form.body.collectionId}`);
 		}
-
 
 		subtitle = form.body.message;
 		caption = form.body.caption;
@@ -73,9 +87,22 @@
 							<Collections createFormElm={formElmRef} />
 						</form>
 					{:else}
-						<form use:enhance enctype="multipart/form-data" action="?/createFileCollection" method="post" bind:this={addFileFormElm}>
+						<form
+							use:enhance
+							enctype="multipart/form-data"
+							action="?/createFileCollection"
+							method="post"
+							bind:this={addFileFormElm}
+						>
 							<FileCollection {addFileFormElm} />
 						</form>
+					{/if}
+				</div>
+				<div class="col">					
+					{#if $pdfFileIdsStore != null }
+					<div class="pdf-viewer">
+						<PdfViewer />
+					</div>
 					{/if}
 				</div>
 			</div>

@@ -12,15 +12,16 @@ export async function GET({ request, locals, url }) {
 
 	// get all fileCollections for the user with the collection id and the AccountId
 	const fileCollections = await prisma.pdfFile.findMany({
+		select: {
+			id: true,
+			title: true,
+		},
 		where: {
 			AND: [
 				{ learnCollectionId: collectionId },
 				{ accountId: accountId }
 			]
 		},
-		include: {
-			learnCollection: true,
-		}
 	});
 
 	// return the collections

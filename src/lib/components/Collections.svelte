@@ -13,13 +13,6 @@
 	let selectedCollection: { id: string; title: string } | null | undefined = null;
 	let collections: { id: string; title: string }[] | null | undefined = undefined;
 
-	//get the url parameters
-	const urlParams = new URLSearchParams(window.location.search);
-	const tempCollectionId = urlParams.get('collection');
-
-	if (tempCollectionId != null && tempCollectionId != undefined && tempCollectionId != '') {
-		$collectionIdStore = tempCollectionId;
-	}
 
 	function selectedId(id: string | null) {
 		if (id == null) {

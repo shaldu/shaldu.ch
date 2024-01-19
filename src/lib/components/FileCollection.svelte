@@ -1,14 +1,7 @@
 <script lang="ts">
-	import SingleCollection from '$lib/components/SingleCollection.svelte';
 	import ArrowLeft from 'carbon-icons-svelte/lib/ArrowLeft.svelte';
-	import { collectionIdStore } from '$lib/stores';
-	import {
-		Modal,
-		Button,
-		TextInput,
-		SkeletonText,
-		FileUploader
-	} from 'carbon-components-svelte';
+	import { collectionIdStore, pdfFileIdsStore } from '$lib/stores';
+	import { Modal, Button, TextInput, SkeletonText, FileUploader } from 'carbon-components-svelte';
 	import Add from 'carbon-icons-svelte/lib/Add.svelte';
 	import SingleFileCollection from './SingleFileCollection.svelte';
 
@@ -32,33 +25,64 @@
 			.then((response) => response.json())
 			.then((data) => {
 				fileCollection = data;
-				console.log(fileCollection);
-				
 			})
 			.catch((error) => {
 				console.error('Error:', error);
 			});
 	}
 
-	const selection = (id: string) => () => {
+	const selection = (id: string, isSelected: boolean) => () => {
 		//set the selected collection as a parameter in the url
-		console.log(id);
+		const baseState = `?collection=${$collectionIdStore}`;
+
+		// history.pushState(null, '', `&file=${id}`);
+		const pdfIdCollection: string[] = [];
+
+		//is array
+
+		//check if array
+		if (Array.isArray($pdfFileIdsStore)) {
+			//check if id is inside pdfIdCollection
+			if ($pdfFileIdsStore.includes(id)) {
+				if (isSelected) {
+					pdfIdCollection.push(id);
+					pdfIdCollection.push(...$pdfFileIdsStore);
+				} else {
+					pdfIdCollection.push(...$pdfFileIdsStore);
+				}
+			} else {
+				pdfIdCollection.push(...$pdfFileIdsStore);
+			}
+		} else {
+			pdfIdCollection.push(id);
+		}
+
+		$pdfFileIdsStore = null;
+		setTimeout(() => {
+			$pdfFileIdsStore = pdfIdCollection;
+			console.log($pdfFileIdsStore);
+		}, 10);
 	};
 </script>
 
 <div class="collection card">
 	<div class="card-body">
 		<div class="w-100 position-relative h-100">
-			<Button class="w-100 back-to" size="small" icon={ArrowLeft} on:click={() => {
-				$collectionIdStore = null;
-				//remove remove the parameter from the url
-				history.pushState(null, '', `?`);
-			}}>Back to collections</Button>
+			<Button
+				class="w-100 back-to"
+				size="small"
+				icon={ArrowLeft}
+				on:click={() => {
+					$collectionIdStore = null;
+					//remove remove the parameter from the url
+					history.pushState(null, '', `?`);
+				}}>Back to collections</Button
+			>
 			<h5 class="card-title mb-4 mt-4">File Collection</h5>
 			<div class="collection-holder w-100">
 				{#if fileCollection != null && fileCollection.length > 0}
 					{#each fileCollection as file, index}
-						<SingleFileCollection title={file.title} id={file.id} selection={selection}/>
+						<SingleFileCollection title={file.title} id={file.id} {selection} />
 					{/each}
 				{:else if fileCollection == undefined}
 					<SkeletonText heading />
