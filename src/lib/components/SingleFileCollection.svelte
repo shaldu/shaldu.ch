@@ -8,4 +8,4 @@
    export let id = '';
 </script>
 
-<SelectableTile class="mb-4 w-100"  light on:click={selection(id, !selected)} bind:selected>{title}</SelectableTile>
+<SelectableTile class="mb-4 w-100" light on:click={selection(id, !selected)} bind:selected>{title}</SelectableTile>

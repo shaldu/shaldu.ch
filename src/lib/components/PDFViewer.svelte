@@ -47,12 +47,19 @@
 				console.error('Error:', error);
 			});
 	}
+
+	function onTabClick(event: MouseEvent){
+		event.preventDefault();
+		console.log(event.target);
+		
+	}
+
 </script>
 
 {#if pdfFiles != null}
 	<Tabs type="container">
 		{#each pdfFiles as pdfFile}
-			<Tab>
+			<Tab on:click={(e) => onTabClick(e)}>
 				<span class="pdf-tab-pane">
 					<div class="pdf-tab-pane-text">
 						<Truncate>{pdfFile.title}</Truncate>

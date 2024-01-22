@@ -80,7 +80,7 @@
 			<div class="collection-holder w-100">
 				{#if fileCollection != null && fileCollection.length > 0}
 					{#each fileCollection as file, index}
-						<SingleFileCollection title={file.title} id={file.id} {selection} />
+						<SingleFileCollection title={file.title} id={file.id} {selection} selected={$pdfFileIdsStore?.includes(file.id)} />
 					{/each}
 				{:else if fileCollection == undefined}
 					<SkeletonText heading />
