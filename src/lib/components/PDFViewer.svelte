@@ -1,23 +1,35 @@
 <script lang="ts">
 	import { Button } from 'carbon-components-svelte';
 	import ArrowRight from 'carbon-icons-svelte/lib/ArrowRight.svelte';
+	import { Tabs, Tab, TabContent, Truncate } from 'carbon-components-svelte';
+	import Close from 'carbon-icons-svelte/lib/Close.svelte';
 	import { pdfFileIdsStore } from '$lib/stores';
 
-	let pdfFile: {
-		title: string;
-		path: string;
-		progress: number;
-		bookmarks: {
-			title: string;
-			link: string;
-			description: string;
-			page: number;
-		}[];
-	} | null = null;
-    
-	fetchPdfFile();
+	let pdfFiles:
+		| {
+				title: string;
+				path: string;
+				progress: number;
+				bookmarks: {
+					title: string;
+					link: string;
+					description: string;
+					page: number;
+				}[];
+		  }[]
+		| null = null;
 
-	function fetchPdfFile() {
+	fetchPdfFiles();
+
+	//subscribe to the store
+	$: $pdfFileIdsStore;
+
+	//check if the store has changed
+	$: if ($pdfFileIdsStore != null && $pdfFileIdsStore != undefined) {
+		fetchPdfFiles();
+	}
+
+	function fetchPdfFiles() {
 		//fetch the collections from the server
 		const url = '/api/auth/pdffile?fileId=' + $pdfFileIdsStore ?? '';
 
@@ -29,7 +41,7 @@
 		})
 			.then((response) => response.json())
 			.then((data) => {
-				pdfFile = data;
+				pdfFiles = data;
 			})
 			.catch((error) => {
 				console.error('Error:', error);
@@ -37,6 +49,26 @@
 	}
 </script>
 
-{#if pdfFile != null}
-	<h3>{pdfFile.title}</h3>
+{#if pdfFiles != null}
+	<Tabs type="container">
+		{#each pdfFiles as pdfFile}
+			<Tab>
+				<span class="pdf-tab-pane">
+					<div class="pdf-tab-pane-text">
+						<Truncate>{pdfFile.title}</Truncate>
+					</div>
+					<Close />
+				</span>
+			</Tab>
+		{/each}
+		<svelte:fragment slot="content">
+			{#each pdfFiles as pdfFile}
+				<TabContent class="pdf-tab-content">
+					<div class="w-100 h-100">
+						<iframe src={pdfFile.path} frameborder="0"></iframe>
+					</div>
+				</TabContent>
+			{/each}
+		</svelte:fragment>
+	</Tabs>
 {/if}

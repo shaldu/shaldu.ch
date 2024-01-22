@@ -7,13 +7,17 @@ export async function GET({ request, locals, url }) {
 	// get the session
 	const session = await locals.getSession() as CustomSession;
 	const accountId = session.account.id;
-	const collectionId = url.searchParams.get('fileId') as string;
+	const collectionIds = url.searchParams.get('fileId') as string;
+
+	const collectionIdsArray:string[] = collectionIds.split(',');
 
 	// get all collections for the user
-	const collections = await prisma.pdfFile.findFirst({
+	const collections = await prisma.pdfFile.findMany({
 		where: {
-			accountId,
-			id: collectionId
+			id: {
+				in: collectionIdsArray
+			},
+			accountId: accountId
 		},
 		include:{
 			bookmarks: true

@@ -36,31 +36,29 @@
 		const baseState = `?collection=${$collectionIdStore}`;
 
 		// history.pushState(null, '', `&file=${id}`);
-		const pdfIdCollection: string[] = [];
+		const pdfIdCollection: any = $pdfFileIdsStore ?? [];
 
 		//is array
 
 		//check if array
-		if (Array.isArray($pdfFileIdsStore)) {
-			//check if id is inside pdfIdCollection
-			if ($pdfFileIdsStore.includes(id)) {
-				if (isSelected) {
-					pdfIdCollection.push(id);
-					pdfIdCollection.push(...$pdfFileIdsStore);
-				} else {
-					pdfIdCollection.push(...$pdfFileIdsStore);
+		if (pdfIdCollection != null && pdfIdCollection != undefined && Array.isArray(pdfIdCollection)) {
+			//check if id inside list
+			if (pdfIdCollection.includes(id)) {
+				if (!isSelected) {
+					//slice
+					const index = pdfIdCollection.indexOf(id);
+					pdfIdCollection.splice(index, 1);
 				}
 			} else {
-				pdfIdCollection.push(...$pdfFileIdsStore);
+				if (isSelected) {
+					pdfIdCollection.push(id);
+				}
 			}
-		} else {
-			pdfIdCollection.push(id);
 		}
 
-		$pdfFileIdsStore = null;
 		setTimeout(() => {
 			$pdfFileIdsStore = pdfIdCollection;
-			console.log($pdfFileIdsStore);
+			history.pushState(null, '', baseState + `&file=${pdfIdCollection.join(',')}`);
 		}, 10);
 	};
 </script>

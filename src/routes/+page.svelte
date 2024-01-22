@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { sessionStore, collectionIdStore, pdfFileIdsStore } from '$lib/stores';
-	import { Tabs, Tab, TabContent, ToastNotification } from 'carbon-components-svelte';
+	import { ToastNotification } from 'carbon-components-svelte';
 	import type { ActionData } from './$types';
 	import Collections from '$lib/components/Collections.svelte';
 	import FileCollection from '$lib/components/FileCollection.svelte';
@@ -17,9 +17,8 @@
 	}
 
 	const tempFileId = urlParams.get('file');
-
 	if (tempFileId != null && tempFileId != undefined && tempFileId != '') {
-		$pdfFileIdsStore = tempFileId;
+		$pdfFileIdsStore = tempFileId.split(',') ?? [];
 	}
 
 	export let form: ActionData;
@@ -98,11 +97,11 @@
 						</form>
 					{/if}
 				</div>
-				<div class="col">					
-					{#if $pdfFileIdsStore != null }
-					<div class="pdf-viewer">
-						<PdfViewer />
-					</div>
+				<div class="col">
+					{#if $pdfFileIdsStore != null}
+						<div class="pdf-viewer">
+							<PdfViewer />
+						</div>
 					{/if}
 				</div>
 			</div>
