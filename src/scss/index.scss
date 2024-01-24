@@ -206,3 +206,19 @@ header {
     height: 100%;
     border: none;
 }
+
+.pdf-tab-pane-close {
+    z-index: 1;
+    &:hover {
+        cursor: pointer;
+    }
+    svg {
+        pointer-events: none;
+    }
+}
+
+.highlight {
+    background-color: yellow;
+    opacity: 0.5;
+    pointer-events: none;
+}

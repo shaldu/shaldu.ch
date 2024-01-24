@@ -14,7 +14,7 @@ const config = {
 			$scss: "./src/scss",
 		},
 	},
-	preprocess: sveltePreprocess()
+	preprocess: sveltePreprocess(),
 
 };
 

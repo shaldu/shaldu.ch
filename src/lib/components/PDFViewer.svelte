@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { Button } from 'carbon-components-svelte';
-	import ArrowRight from 'carbon-icons-svelte/lib/ArrowRight.svelte';
 	import { Tabs, Tab, TabContent, Truncate } from 'carbon-components-svelte';
 	import Close from 'carbon-icons-svelte/lib/Close.svelte';
 	import { pdfFileIdsStore } from '$lib/stores';
+	import PdfReader from './PDFReader.svelte';
+
 
 	let pdfFiles:
 		| {
+				id: string;
 				title: string;
 				path: string;
 				progress: number;
@@ -27,6 +28,7 @@
 	//check if the store has changed
 	$: if ($pdfFileIdsStore != null && $pdfFileIdsStore != undefined) {
 		fetchPdfFiles();
+		//TODO: update the url with the new pdfFileIdsStore
 	}
 
 	function fetchPdfFiles() {
@@ -48,31 +50,38 @@
 			});
 	}
 
-	function onTabClick(event: MouseEvent){
+	function onTabClick(event: MouseEvent, id: string) {
 		event.preventDefault();
-		console.log(event.target);
-		
+		const close: HTMLDivElement | null = event.target as HTMLDivElement
+		if (close && close.classList.contains('pdf-tab-pane-close')) {
+			//close tab remove from storage and url, splice
+			$pdfFileIdsStore = $pdfFileIdsStore?.filter((item) => item !== id);
+
+		}
 	}
+
 
 </script>
 
 {#if pdfFiles != null}
 	<Tabs type="container">
 		{#each pdfFiles as pdfFile}
-			<Tab on:click={(e) => onTabClick(e)}>
+			<Tab on:click={(e) => onTabClick(e, pdfFile.id)}>
 				<span class="pdf-tab-pane">
 					<div class="pdf-tab-pane-text">
 						<Truncate>{pdfFile.title}</Truncate>
 					</div>
-					<Close />
+					<div class="pdf-tab-pane-close">
+						<Close />
+					</div>
 				</span>
 			</Tab>
 		{/each}
 		<svelte:fragment slot="content">
 			{#each pdfFiles as pdfFile}
 				<TabContent class="pdf-tab-content">
-					<div class="w-100 h-100">
-						<iframe src={pdfFile.path} frameborder="0"></iframe>
+					<div class="w-100 h-100">					
+						<PdfReader {pdfFile} />
 					</div>
 				</TabContent>
 			{/each}
