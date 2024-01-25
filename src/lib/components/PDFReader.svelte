@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+
 	export let pdfFile: {
 		id: string;
 		title: string;
@@ -13,12 +14,8 @@
 			page: number;
 		}[];
 	} | null = null;
-
-	onMount(() => {
-
-	});
 </script>
 
 {#if pdfFile != null}
-	<iframe src="{pdfFile.path}" title="{pdfFile.title}" frameborder="0"></iframe>
+	<iframe src="/pdfjs/web/viewer.html" title="{pdfFile.title}" frameborder="0"></iframe>
 {/if}
