@@ -2607,11 +2607,13 @@ const PDFViewerApplication = {
     await Promise.all(promises);
   },
   async open(args) {
+    
     if (this.pdfLoadingTask) {
       await this.close();
     }
     const workerParams = _app_options_js__WEBPACK_IMPORTED_MODULE_2__.AppOptions.getAll(_app_options_js__WEBPACK_IMPORTED_MODULE_2__.OptionKind.WORKER);
     Object.assign(pdfjs_lib__WEBPACK_IMPORTED_MODULE_1__.GlobalWorkerOptions, workerParams);
+
     if (args.url) {
       this.setTitleUsingUrl(args.originalUrl || args.url, args.url);
     }
@@ -2636,6 +2638,7 @@ const PDFViewerApplication = {
       this.progress(loaded / total);
     };
     return loadingTask.promise.then(pdfDocument => {
+      
       this.load(pdfDocument);
     }, reason => {
       if (loadingTask !== this.pdfLoadingTask) {
@@ -4518,7 +4521,7 @@ const defaultOptions = {
 };
 {
   defaultOptions.defaultUrl = {
-    value: "compressed.tracemonkey-pldi-09.pdf",
+    value: "",
     kind: OptionKind.VIEWER
   };
   defaultOptions.sandboxBundleSrc = {
@@ -12753,7 +12756,7 @@ class BasePreferences {
     "disableRange": false,
     "disableStream": false,
     "enableXfa": true,
-    "viewerCssTheme": 0
+    "viewerCssTheme": 2
   });
   #prefs = Object.create(null);
   #initializedPromise = null;

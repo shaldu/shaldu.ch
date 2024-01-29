@@ -7957,6 +7957,7 @@ function getFilenameFromUrl(url, onlyStripPath = false) {
   return url.substring(url.lastIndexOf("/") + 1);
 }
 function getPdfFilenameFromUrl(url, defaultFilename = "document.pdf") {
+
   if (typeof url !== "string") {
     return defaultFilename;
   }
@@ -14439,6 +14440,7 @@ class NetworkManager {
     const pendingRequest = this.pendingRequests[xhrId] = {
       xhr
     };
+    
     xhr.open("GET", this.url);
     xhr.withCredentials = this.withCredentials;
     for (const property in this.httpHeaders) {
