@@ -5,7 +5,7 @@ export type CustomSession = Session & {
     account: {
         id: string;
         githubId: string;
-        
+        activeFileTabIndex: number;
     };
 }
 

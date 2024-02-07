@@ -4,8 +4,9 @@
 	import { pdfFileIdsStore, sessionStore } from '$lib/stores';
 	import PdfReader from './PDFReader.svelte';
 
-	let selected = 0;
-
+	let selected = $sessionStore?.account.activeFileTabIndex ?? 0;
+	console.log('selected: ' + selected);
+	
 	type PdfFile = {
 		id: string;
 		title: string;
@@ -19,113 +20,59 @@
 		}[];
 	} | null;
 
-	let pdfFiles: PdfFile[] | null = null;
-
-	fetchPdfFiles();
+	let pdfFileNames: string[] = [];
 
 	//subscribe to the store
 	$: $pdfFileIdsStore;
 
 	//check if the store has changed
 	$: if ($pdfFileIdsStore != null && $pdfFileIdsStore != undefined) {
-		fetchPdfFiles();
-		//TODO: update the url with the new pdfFileIdsStore
-		tabChange();
+		//fetch the pdf file names
+		fetchPdfFileName().then((data) => {
+			//set the pdf file names
+			//create id, name mapping
+
+			data.forEach((pdfFile: PdfFile) => {
+				if (pdfFile == null) return;
+				pdfFileNames[pdfFile.id] = pdfFile.title;
+			});
+		});
 	}
 
-	async function fetchPdfFiles() {
+	async function fetchPdfFileName() {
 		//fetch the collections from the server
 		const url = '/api/auth/pdffile?fileId=' + $pdfFileIdsStore ?? '';
 
-		await fetch(url, {
+		const response = await fetch(url, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
 			}
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				// pdfFiles = data;
-				//loop through the data and check if the pdfFiles is already in data if not add it to the end
-				if (pdfFiles == null) {
-					pdfFiles = data;
-				} else {
-					data.forEach((item: PdfFile) => {
-						if (item == null) return;
-						const index = pdfFiles?.findIndex((pdfFile) => pdfFile?.id === item.id);
-						if (index == -1) {
-							pdfFiles?.push(item);
-						}
-					});
-					const containingIds: string[] = []
-					pdfFiles?.forEach((item) => {
-						if (item == null) return;
-						const index = data.findIndex((pdfFile) => pdfFile?.id === item.id);
-						if (index == -1) {
-							containingIds.push(item.id);
-						}
-					});
-					containingIds.forEach((id) => {
-						const index = pdfFiles?.findIndex((pdfFile) => pdfFile?.id === id);
-						if (index != -1) {
-							pdfFiles?.splice(index, 1);
-						}
-					});
-					const tempPdfFiles = pdfFiles;
-					pdfFiles = [];
-					setTimeout(() => {
-						pdfFiles = tempPdfFiles;
-					}, 100);
-				}
-			})
-			.catch((error) => {
-				console.error('Error:', error);
-			});
+		});
+
+		const data = await response.json();
+		return data;
 	}
 
-	function onTabClick(event: MouseEvent, id: string, index: string) {
+	function onTabClick(event: MouseEvent, id: string, index: number) {
+		if ($pdfFileIdsStore == null) return;
 		event.preventDefault();
-		let tmpSelected = '';
-		const close: HTMLDivElement | null = event.target as HTMLDivElement;
-		if (close && close.classList.contains('pdf-tab-pane-close')) {
-			//close tab remove from storage and url, splice
-			$pdfFileIdsStore = $pdfFileIdsStore?.filter((item) => item !== id);
-		} else {
-			//open tab
-			tmpSelected = index;
-		}
-		saveCurrentSelectedToSession(tmpSelected);
-	}
+		const target = event.target as HTMLElement;
+		if (!target?.classList.contains('pdf-tab-pane-close')) return;
 
-	async function tabChange() {
-		await fetchPdfFiles();
-		setUrl();
-		loadCurrentSelectedFromSession();
-	}
-
-	function setUrl() {
-		const url = new URL(window.location.href);
-		url.searchParams.set('file', $pdfFileIdsStore?.join(','));
-		window.history.pushState({}, '', url.toString());
-	}
-
-	function saveCurrentSelectedToSession(selected: string = '') {
-		$sessionStore.selectedTab = selected;
-	}
-
-	function loadCurrentSelectedFromSession() {
-		selected = $sessionStore.selectedTab;
+		$pdfFileIdsStore.filter((pdfFileId) => pdfFileId !== id);
+				
 	}
 
 </script>
 
-{#if pdfFiles != null}
-	<Tabs type="container" selected={selected}>
-		{#each pdfFiles as pdfFile, index}
-			<Tab on:click={(e) => onTabClick(e, pdfFile.id, index)} tabindex={pdfFile.id}>
+{#if $pdfFileIdsStore != null}
+	<Tabs type="container" bind:selected>
+		{#each $pdfFileIdsStore as pdfFileId, index}
+			<Tab on:click={(event) => onTabClick(event, pdfFileId, index)}>
 				<span class="pdf-tab-pane">
 					<div class="pdf-tab-pane-text">
-						<Truncate>{pdfFile.title}</Truncate>
+						<Truncate>{pdfFileNames[pdfFileId]}</Truncate>
 					</div>
 					<div class="pdf-tab-pane-close">
 						<Close />
@@ -134,10 +81,10 @@
 			</Tab>
 		{/each}
 		<svelte:fragment slot="content">
-			{#each pdfFiles as pdfFile}
+			{#each $pdfFileIdsStore as pdfFileId}
 				<TabContent class="pdf-tab-content">
 					<div class="w-100 h-100">
-						<PdfReader {pdfFile} />
+						<PdfReader {pdfFileId} />
 					</div>
 				</TabContent>
 			{/each}
