@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../app.scss';
 	import '../../node_modules/bootstrap/scss/bootstrap.scss';
 	import 'carbon-components-svelte/css/g100.css';
 	import Loader from '$lib/components/Loader.svelte';
@@ -11,7 +12,7 @@
 	export let data;
 	const session: Session | null = data?.session ?? null;
 	sessionStore.set(session);
-	
+
 	setTimeout(() => {
 		loading = false;
 	}, 100);
@@ -19,10 +20,10 @@
 
 <!-- if loading show Loader else slot -->
 {#if loading ?? true}
-	<Loader />
+	<Loader></Loader>
 {:else}
 	<header>
-		<Header/>
+		<Header></Header>
 	</header>
 	<main>
 		<slot />

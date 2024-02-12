@@ -5,8 +5,7 @@
 	import PdfReader from './PDFReader.svelte';
 
 	let selected = $sessionStore?.account.activeFileTabIndex ?? 0;
-	console.log('selected: ' + selected);
-	
+
 	type PdfFile = {
 		id: string;
 		title: string;
@@ -60,34 +59,53 @@
 		const target = event.target as HTMLElement;
 		if (!target?.classList.contains('pdf-tab-pane-close')) return;
 
-		$pdfFileIdsStore.filter((pdfFileId) => pdfFileId !== id);
-				
+		$pdfFileIdsStore = $pdfFileIdsStore.filter((pdfFileId) => pdfFileId !== id);
+		setTimeout(() => {
+			// selected = index - 1;
+			$sessionStore.account.activeFileTabIndex = selected;
+		}, 100);
 	}
 
+	function convertIdToUniqueString(id: string) {
+		return id.replaceAll(/[^a-zA-Z]/g, '');
+	}
 </script>
 
 {#if $pdfFileIdsStore != null}
-	<Tabs type="container" bind:selected>
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
 		{#each $pdfFileIdsStore as pdfFileId, index}
-			<Tab on:click={(event) => onTabClick(event, pdfFileId, index)}>
-				<span class="pdf-tab-pane">
+			<li class="nav-item" role="presentation">
+				<button
+					on:click={(event) => onTabClick(event, pdfFileId, index)}
+					class="nav-link {index === selected ? 'active' : ''}"
+					id="{convertIdToUniqueString(pdfFileId)}-tab"
+					data-bs-toggle="tab"
+					data-bs-target="#{convertIdToUniqueString(pdfFileId)}"
+					type="button"
+					role="tab"
+					aria-controls="{convertIdToUniqueString(pdfFileId)}"
+					aria-selected="true"
+				>
 					<div class="pdf-tab-pane-text">
 						<Truncate>{pdfFileNames[pdfFileId]}</Truncate>
 					</div>
 					<div class="pdf-tab-pane-close">
 						<Close />
 					</div>
-				</span>
-			</Tab>
+				</button>
+			</li>
 		{/each}
-		<svelte:fragment slot="content">
-			{#each $pdfFileIdsStore as pdfFileId}
-				<TabContent class="pdf-tab-content">
-					<div class="w-100 h-100">
-						<PdfReader {pdfFileId} />
-					</div>
-				</TabContent>
-			{/each}
-		</svelte:fragment>
-	</Tabs>
+	</ul>
+	<div class="tab-content" id="myTabContent">
+		{#each $pdfFileIdsStore as pdfFileId, index}
+			<div
+				class="tab-pane fade{index === selected ? ' show active' : ''}"
+				id="{convertIdToUniqueString(pdfFileId)}"
+				role="tabpanel"
+				aria-labelledby="{convertIdToUniqueString(pdfFileId)}-tab"
+			>
+				<PdfReader {pdfFileId} />
+			</div>
+		{/each}
+	</div>
 {/if}
