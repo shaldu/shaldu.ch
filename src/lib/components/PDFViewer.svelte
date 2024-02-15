@@ -53,59 +53,65 @@
 		return data;
 	}
 
-	function onTabClick(event: MouseEvent, id: string, index: number) {
+	function onTabClick(event: MouseEvent, id: string) {
 		if ($pdfFileIdsStore == null) return;
 		event.preventDefault();
 		const target = event.target as HTMLElement;
 		if (!target?.classList.contains('pdf-tab-pane-close')) return;
+		closeTab(id);
+	}
 
-		$pdfFileIdsStore = $pdfFileIdsStore.filter((pdfFileId) => pdfFileId !== id);
+	function closeTab(id: string) {
+		if ($pdfFileIdsStore == null) return;
+		const temp = $pdfFileIdsStore.filter((pdfFileId) => pdfFileId !== id);
+		$pdfFileIdsStore = null;
+
 		setTimeout(() => {
-			// selected = index - 1;
-			$sessionStore.account.activeFileTabIndex = selected;
-		}, 100);
+			$pdfFileIdsStore = temp;
+		}, 10);
 	}
 
 	function convertIdToUniqueString(id: string) {
 		return id.replaceAll(/[^a-zA-Z]/g, '');
 	}
+
+	//add keyevent to close tab
+	window.addEventListener('keydown', (event) => {
+		//delete key or backspace key
+		if ((event.key === 'w' && event.ctrlKey ) || (event.key === 'w' && event.metaKey) || (event.key === 'w' && event.altKey) ||  (event.key === 'Backspace' )) {
+			//close the tab
+			if ($pdfFileIdsStore == null) return;
+			if (document.activeElement?.classList.contains('bx--tabs__nav-link')) {
+					
+			}			
+			closeTab($pdfFileIdsStore[selected]);
+		}
+	});
+
 </script>
 
 {#if $pdfFileIdsStore != null}
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<Tabs type="container" bind:selected>
 		{#each $pdfFileIdsStore as pdfFileId, index}
-			<li class="nav-item" role="presentation">
-				<button
-					on:click={(event) => onTabClick(event, pdfFileId, index)}
-					class="nav-link {index === selected ? 'active' : ''}"
-					id="{convertIdToUniqueString(pdfFileId)}-tab"
-					data-bs-toggle="tab"
-					data-bs-target="#{convertIdToUniqueString(pdfFileId)}"
-					type="button"
-					role="tab"
-					aria-controls="{convertIdToUniqueString(pdfFileId)}"
-					aria-selected="true"
-				>
+			<Tab on:click={(event) => onTabClick(event, pdfFileId)}>
+				<span class="pdf-tab-pane" data-pdffile-tab={convertIdToUniqueString(pdfFileId)}>
 					<div class="pdf-tab-pane-text">
 						<Truncate>{pdfFileNames[pdfFileId]}</Truncate>
 					</div>
 					<div class="pdf-tab-pane-close">
 						<Close />
 					</div>
-				</button>
-			</li>
+				</span>
+			</Tab>
 		{/each}
-	</ul>
-	<div class="tab-content" id="myTabContent">
-		{#each $pdfFileIdsStore as pdfFileId, index}
-			<div
-				class="tab-pane fade{index === selected ? ' show active' : ''}"
-				id="{convertIdToUniqueString(pdfFileId)}"
-				role="tabpanel"
-				aria-labelledby="{convertIdToUniqueString(pdfFileId)}-tab"
-			>
-				<PdfReader {pdfFileId} />
-			</div>
-		{/each}
-	</div>
+		<svelte:fragment slot="content">
+			{#each $pdfFileIdsStore as pdfFileId}
+				<TabContent class="pdf-tab-content">
+					<div class="w-100 h-100">
+						<PdfReader {pdfFileId} pdfFileIdEscaped={convertIdToUniqueString(pdfFileId)} />
+					</div>
+				</TabContent>
+			{/each}
+		</svelte:fragment>
+	</Tabs>
 {/if}
