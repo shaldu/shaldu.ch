@@ -132,8 +132,23 @@ header {
     top: calc(0 + #{$header-height});
     transition: right 0.5s ease-in-out;
 
+    .bx--toast-notification__title {
+        font-size: 1.1rem;
+        margin-bottom: 3px;
+    }
+
     &.hide {
         right: -100%;
+    }
+
+    &.small {
+        .bx--toast-notification__caption {
+            display: none;
+        }
+    }
+
+    button {
+        margin-bottom: 1rem;
     }
 }
 

@@ -75,8 +75,7 @@
 				icon={ArrowLeft}
 				on:click={() => {
 					$collectionIdStore = null;
-					//remove remove the parameter from the url
-					history.pushState(null, '', `?`);
+
 				}}>Back to collections</Button
 			>
 			<h5 class="card-title mb-4 mt-4">File Collection</h5>

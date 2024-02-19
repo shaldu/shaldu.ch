@@ -22,9 +22,12 @@
 			if (collections == null || collections == undefined) return;
 			selectedCollection = collections.find((collection) => collection.id == id);
 		}
+		const url = new URL(window.location.href);
+
 		//set the selected collection as a parameter in the url
 		history.pushState(null, '', `?collection=${id}`);
 		$collectionIdStore = selectedCollection?.id;
+
 	}
 
 	function fetchCollections() {

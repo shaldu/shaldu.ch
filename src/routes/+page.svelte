@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { sessionStore, collectionIdStore, pdfFileIdsStore } from '$lib/stores';
-	import { ToastNotification } from 'carbon-components-svelte';
+	import { Button, ToastNotification } from 'carbon-components-svelte';
 	import type { ActionData } from './$types';
 	import Collections from '$lib/components/Collections.svelte';
 	import FileCollection from '$lib/components/FileCollection.svelte';
 	import { enhance } from '$app/forms';
 	import { Pdf } from 'carbon-icons-svelte';
 	import PdfViewer from '$lib/components/PDFViewer.svelte';
+	import { onMount } from 'svelte';
 
 	//get the url parameters
 	const urlParams = new URLSearchParams(window.location.search);
@@ -59,9 +60,77 @@
 
 	let formElmRef: HTMLFormElement;
 	let addFileFormElm: HTMLFormElement;
+
+	let showRedirectToast = false;
+	let lastUrlToast: HTMLDivElement | undefined | null;
+
+	onMount(async () => {
+		//read local storage
+		const lastUrl = localStorage.getItem('lastUrl');
+
+		//and the date is less than 30 seconds
+		if (lastUrl != window.location.href) {
+			const pageAccessedByReload =
+				(window.performance.navigation && window.performance.navigation.type === 1) ||
+				window.performance
+					.getEntriesByType('navigation')
+					.map((nav) => nav.type)
+					.includes('reload');
+
+			if (!pageAccessedByReload) {
+				//fetch the lastUrl
+				const url = '/api/auth/account';
+				const response = await fetch(url, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+
+				const data = await response.json();
+
+				//if the page isnt accesed by reload, then redirect to the last url
+				//uri decode data.lastUrl
+				const redirectUrl = decodeURIComponent(data.lastUrl);
+				//set the storage
+				localStorage.setItem('lastUrl', redirectUrl);
+				showRedirectToast = true;
+				console.log(showRedirectToast);
+				setTimeout(() => {
+					lastUrlToast?.classList.remove('hide');
+				}, 100);
+			}
+		}
+	});
 </script>
 
 <div>
+	{#if showRedirectToast}
+		<div class="toast-notification hide small" bind:this={lastUrlToast}>
+			<ToastNotification
+				title="Reopen last files?"
+				subtitle="Reopens the last files you were working on."
+				caption=""
+				kind="info"
+				timeout={12000}
+				lowContrast
+				on:close={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					lastUrlToast?.classList.add('hide');
+				}}
+			>
+				<!-- create a yes button to redirect -->
+				<Button
+					kind="tertiary"
+					size="small"
+					on:click={() => {
+						window.location.href = localStorage.getItem('lastUrl');
+					}}
+				>Yes</Button>
+			</ToastNotification>
+		</div>
+	{/if}
 	{#if $sessionStore?.user}
 		<div class="toast-notification hide" bind:this={toast}>
 			<ToastNotification
