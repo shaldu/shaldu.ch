@@ -4,6 +4,7 @@
 	import { Modal, Button, TextInput, SkeletonText, FileUploader } from 'carbon-components-svelte';
 	import Add from 'carbon-icons-svelte/lib/Add.svelte';
 	import SingleFileCollection from './SingleFileCollection.svelte';
+	import { updateLastUrl } from '$lib/auth';
 
 	let open = false;
 
@@ -59,6 +60,8 @@
 		setTimeout(() => {
 			$pdfFileIdsStore = pdfIdCollection;
 			history.pushState(null, '', baseState + `&file=${pdfIdCollection.join(',')}`);
+			//update to DB to save url
+			updateLastUrl();
 		}, 10);
 	};
 </script>

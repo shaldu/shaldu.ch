@@ -16,6 +16,7 @@ model Account {
   learnCollection LearnCollection[]
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
+  lastUrl         String?
 }
 
 model LearnCollection {

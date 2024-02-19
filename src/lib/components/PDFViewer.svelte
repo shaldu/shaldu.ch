@@ -3,6 +3,7 @@
 	import Close from 'carbon-icons-svelte/lib/Close.svelte';
 	import { pdfFileIdsStore, sessionStore } from '$lib/stores';
 	import PdfReader from './PDFReader.svelte';
+	import { updateLastUrl } from '$lib/auth';
 
 	let selected = $sessionStore?.account.activeFileTabIndex ?? 0;
 
@@ -35,6 +36,8 @@
 				if (pdfFile == null) return;
 				pdfFileNames[pdfFile.id] = pdfFile.title;
 			});
+
+			updateLastUrl();
 		});
 	}
 
@@ -68,8 +71,26 @@
 
 		setTimeout(() => {
 			$pdfFileIdsStore = temp;
-		}, 10);
+			updateUrl();
+		}, 12);
 	}
+
+	function updateUrl() {
+		const url = new URL(window.location.href);
+		if ($pdfFileIdsStore == null || $pdfFileIdsStore.length == 0) {
+			url.searchParams.delete('file');
+			window.history.pushState({}, '', url.toString());
+			return;
+		} else {
+			//loop through the pdfFileIdsStore and add to the url
+			const fileArrayString: string = $pdfFileIdsStore.join(',');
+			url.searchParams.set('file', fileArrayString);
+			window.history.pushState({}, '', url.toString());
+		}
+		//update to DB to save url
+		updateLastUrl();
+	}
+	
 
 	function convertIdToUniqueString(id: string) {
 		return id.replaceAll(/[^a-zA-Z]/g, '');
@@ -78,16 +99,19 @@
 	//add keyevent to close tab
 	window.addEventListener('keydown', (event) => {
 		//delete key or backspace key
-		if ((event.key === 'w' && event.ctrlKey ) || (event.key === 'w' && event.metaKey) || (event.key === 'w' && event.altKey) ||  (event.key === 'Backspace' )) {
+		if (
+			(event.key === 'w' && event.ctrlKey) ||
+			(event.key === 'w' && event.metaKey) ||
+			(event.key === 'w' && event.altKey) ||
+			event.key === 'Backspace'
+		) {
 			//close the tab
 			if ($pdfFileIdsStore == null) return;
 			if (document.activeElement?.classList.contains('bx--tabs__nav-link')) {
-					
-			}			
+			}
 			closeTab($pdfFileIdsStore[selected]);
 		}
 	});
-
 </script>
 
 {#if $pdfFileIdsStore != null}

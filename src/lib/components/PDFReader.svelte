@@ -45,7 +45,8 @@
 					type: 'OPEN_PDF',
 					data: {
 						url: pdfFile?.path,
-						bookmarks: pdfFile?.bookmarks
+						bookmarks: pdfFile?.bookmarks,
+						progress: pdfFile?.progress
 					}
 				},
 				'*'
