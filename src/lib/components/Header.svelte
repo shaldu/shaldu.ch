@@ -25,7 +25,7 @@
 	<HeaderNav class="w-100 main-nivagtion-bar">
 		{#if $sessionStore?.user}
 			<div class="main-navigation-bar-left">
-				<HeaderNavItem href="/dashboard" text="Dashboard" />
+				<HeaderNavItem href="/" text="Home" />
 			</div>
 			<div class="main-navigation-bar-right">
 				{#if $sessionStore?.user?.image}

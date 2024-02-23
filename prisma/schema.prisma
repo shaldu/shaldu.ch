@@ -32,7 +32,7 @@ model LearnCollection {
 
 model PdfFile {
   id                String          @id @default(uuid())
-  accountId         String
+  accountId         String          
   title             String
   path              String
   progress          Float

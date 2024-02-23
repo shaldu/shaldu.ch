@@ -127,7 +127,7 @@
 					on:click={() => {
 						window.location.href = localStorage.getItem('lastUrl');
 					}}
-				>Yes</Button>
+				>Open tabs</Button>
 			</ToastNotification>
 		</div>
 	{/if}

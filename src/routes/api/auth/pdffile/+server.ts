@@ -27,3 +27,41 @@ export async function GET({ request, locals, url }) {
 	// return the collections
 	return json(collections);
 }
+
+export async function POST({ request, locals, url }) {
+	//get mode
+	// get the session
+	const session = await locals.getSession() as CustomSession;
+	if (session === undefined || session.account === undefined) {
+		return json({ message: 'Unauthorized' });
+	}
+
+	const accountId = session.account.id;
+    const data = await request.json();
+	const mode = data.mode;
+
+	if (mode === 'setPdfFileProgress') {
+		const pdfFileId = data.pdfFileId;
+		const progress = data.progress;
+		return setPdfFileProgress(accountId, pdfFileId, progress);
+	}
+}
+
+async function setPdfFileProgress(accountId: string, pdfFileId: string, progress: number) {
+	// set the mode for the collections
+	const update = await prisma.pdfFile.updateMany({
+		where: { 
+			AND: [
+				{ id: pdfFileId },
+				{ accountId: accountId }
+			]
+		},
+		data: { progress: progress }
+	});
+
+	if (update) {
+		return json({ message: 'success' });
+	} else {
+		return json({ message: 'failed' });
+	}
+}
