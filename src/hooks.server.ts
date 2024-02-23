@@ -62,7 +62,7 @@ export const handle: Handle = sequence(
 
 				const usr = await prisma.account.findFirst({
 					where: {
-						githubId: token.githubId as string,
+						githubId: token.id as string,
 					},
 					// include: {
 					// 	profile: {
@@ -79,7 +79,6 @@ export const handle: Handle = sequence(
 				if (usr) {
 					//@ts-ignore
 					session.account = usr
-					
 				}
 				return session;
 			}

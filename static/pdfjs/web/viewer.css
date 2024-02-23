@@ -80,13 +80,11 @@
     }
 
 .textLayer ::-moz-selection{
-    background:blue;
-    background:AccentColor;
+    background:#0f62fe;
   }
 
 .textLayer ::selection{
-    background:blue;
-    background:AccentColor;
+  background:#0f62fe;
   }
 
 .textLayer br::-moz-selection{

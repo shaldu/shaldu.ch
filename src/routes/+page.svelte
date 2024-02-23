@@ -92,10 +92,11 @@
 				//if the page isnt accesed by reload, then redirect to the last url
 				//uri decode data.lastUrl
 				const redirectUrl = decodeURIComponent(data.lastUrl);
+
+				if (redirectUrl == null || redirectUrl == '' || redirectUrl == 'null') return;
 				//set the storage
 				localStorage.setItem('lastUrl', redirectUrl);
-				showRedirectToast = true;
-				console.log(showRedirectToast);
+				showRedirectToast = true;				
 				setTimeout(() => {
 					lastUrlToast?.classList.remove('hide');
 				}, 100);

@@ -7,7 +7,7 @@ export async function GET({ request, locals }) {
 	// get the session
 	const session = await locals.getSession() as CustomSession;
 	const accountId = session.account.id;
-
+	
 	// get all collections for the user
 	const collections = await prisma.learnCollection.findMany({
 		where: {
