@@ -9,7 +9,7 @@ export async function GET({ request, locals, url }) {
 	const accountId = session.account.id;
 	const collectionIds = url.searchParams.get('fileId') as string;
 
-	const collectionIdsArray:string[] = collectionIds.split(',');
+	const collectionIdsArray: string[] = collectionIds.split(',');
 
 	// get all collections for the user
 	const collections = await prisma.pdfFile.findMany({
@@ -18,12 +18,13 @@ export async function GET({ request, locals, url }) {
 				in: collectionIdsArray
 			},
 			accountId: accountId
-		},
-		include:{
-			bookmarks: true
+		},		
+		include: {
+			bookmarks: true,
 		}
 	});
 
+	
 	// return the collections
 	return json(collections);
 }
@@ -37,11 +38,11 @@ export async function POST({ request, locals, url }) {
 	}
 
 	const accountId = session.account.id;
-    const data = await request.json();
+	const data = await request.json();
 	const mode = data.mode;
 
 	if (mode === 'setPdfFileProgress') {
-		const pdfFileId = data.pdfFileId;
+		const pdfFileId = data.id;
 		const progress = data.progress;
 		return setPdfFileProgress(accountId, pdfFileId, progress);
 	}
@@ -49,17 +50,20 @@ export async function POST({ request, locals, url }) {
 
 async function setPdfFileProgress(accountId: string, pdfFileId: string, progress: number) {
 	// set the mode for the collections
+
 	const update = await prisma.pdfFile.updateMany({
-		where: { 
+		where: {
 			AND: [
-				{ id: pdfFileId },
-				{ accountId: accountId }
+				{
+					id: pdfFileId,
+					accountId: accountId
+				}
 			]
 		},
 		data: { progress: progress }
 	});
 
-	if (update) {
+	if (update && update.count > 0) {
 		return json({ message: 'success' });
 	} else {
 		return json({ message: 'failed' });

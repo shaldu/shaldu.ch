@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { sessionStore, collectionIdStore, pdfFileIdsStore } from '$lib/stores';
+	import { sessionStore, collectionIdStore, pdfFileIdsStore, selectedPdfFileIdStore } from '$lib/stores';
 	import { Button, ToastNotification } from 'carbon-components-svelte';
 	import type { ActionData } from './$types';
 	import Collections from '$lib/components/Collections.svelte';
 	import FileCollection from '$lib/components/FileCollection.svelte';
 	import { enhance } from '$app/forms';
-	import { Pdf } from 'carbon-icons-svelte';
+	import { Bookmark, Pdf } from 'carbon-icons-svelte';
 	import PdfViewer from '$lib/components/PDFViewer.svelte';
 	import { onMount } from 'svelte';
+	import BookmarkCollection from '$lib/components/Bookmarks/BookmarkCollection.svelte';
 
 	//get the url parameters
 	const urlParams = new URLSearchParams(window.location.search);
@@ -63,6 +64,32 @@
 
 	let showRedirectToast = false;
 	let lastUrlToast: HTMLDivElement | undefined | null;
+
+	//subscribe to the selectedPdfFileIdStore store
+	$: if (selectedPdfFileIdStore != null && selectedPdfFileIdStore != undefined) {
+		//fetch the pdf file
+		pdfFilePromise = fetchPdfFiles();
+	}
+
+	async function fetchPdfFiles() {
+		if ($selectedPdfFileIdStore == null || $selectedPdfFileIdStore == undefined) return;
+		
+		//fetch the collections from the server
+		const url = '/api/auth/pdffile?fileId=' + $selectedPdfFileIdStore ?? '';
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		const data = await response.json();
+		
+		return data[0];
+	}
+	
+	let pdfFilePromise = fetchPdfFiles();
 
 	onMount(async () => {
 		//read local storage
@@ -174,6 +201,11 @@
 						</div>
 					{/if}
 				</div>
+				{#await pdfFilePromise then pdfFile}
+					{#if pdfFile != null}
+						<BookmarkCollection bookmarks={pdfFile.bookmarks}/>
+					{/if}					
+				{/await}
 			</div>
 		</div>
 	{:else}

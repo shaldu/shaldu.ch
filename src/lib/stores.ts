@@ -12,3 +12,4 @@ export type CustomSession = Session & {
 export const sessionStore: Writable<CustomSession | null> = writable();
 export const collectionIdStore: Writable<string | null | undefined> = writable();
 export const pdfFileIdsStore: Writable<string[] | null | undefined> = writable();
+export const selectedPdfFileIdStore: Writable<string | null | undefined> = writable();

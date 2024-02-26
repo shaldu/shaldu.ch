@@ -32,7 +32,7 @@ model LearnCollection {
 
 model PdfFile {
   id                String          @id @default(uuid())
-  accountId         String          
+  accountId         String?          
   title             String
   path              String
   progress          Float
@@ -46,7 +46,7 @@ model PdfFile {
 model Bookmarks {
   id          String   @id @default(uuid())
   title       String
-  link        String
+  progress    Float
   description String
   page        Int
   pdfFileId   String

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Tabs, Tab, TabContent, Truncate } from 'carbon-components-svelte';
 	import Close from 'carbon-icons-svelte/lib/Close.svelte';
-	import { pdfFileIdsStore, sessionStore } from '$lib/stores';
+	import { pdfFileIdsStore, selectedPdfFileIdStore, sessionStore } from '$lib/stores';
 	import PdfReader from './PDFReader.svelte';
 	import { updateLastUrl } from '$lib/auth';
 
@@ -13,8 +13,9 @@
 		path: string;
 		progress: number;
 		bookmarks: {
+			id: string;
 			title: string;
-			link: string;
+			progress: string;
 			description: string;
 			page: number;
 		}[];
@@ -60,7 +61,11 @@
 		if ($pdfFileIdsStore == null) return;
 		event.preventDefault();
 		const target = event.target as HTMLElement;
-		if (!target?.classList.contains('pdf-tab-pane-close')) return;
+		if (!target?.classList.contains('pdf-tab-pane-close')){
+			$selectedPdfFileIdStore = id;
+			
+			return;
+		};
 		closeTab(id);
 	}
 

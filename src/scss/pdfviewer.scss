@@ -1,0 +1,16 @@
+.bookmark-collection-tab {
+    position: absolute;
+    top: $header-height;
+    right: 15px;
+    width: 250px;
+
+    border-radius: 2px;
+    background-color: #272727;
+    color: rgb(198, 198, 198);
+    padding: 10px;
+
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100% - 50px);
+}

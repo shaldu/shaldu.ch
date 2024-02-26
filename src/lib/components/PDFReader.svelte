@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import type { PageServerLoad } from '../../routes/$types';
-
 	export let pdfFileId: string | null = null;
 	export let pdfFileIdEscaped: string | null = null;
 
@@ -11,14 +8,15 @@
 		path: string;
 		progress: number;
 		bookmarks: {
+			id: string;
 			title: string;
-			link: string;
+			progress: string;
 			description: string;
 			page: number;
 		}[];
 	} | null;
 
-	async function fetchPdfFiles() {
+	async function fetchPdfFiles() {		
 		//fetch the collections from the server
 		const url = '/api/auth/pdffile?fileId=' + pdfFileId ?? '';
 
@@ -30,20 +28,24 @@
 		});
 
 		const data = await response.json();
+
 		return data[0];
 	}
 	
 	let pdfFilePromise = fetchPdfFiles();
 
 	function iframeOnLoad(pdfFile: PdfFile) {
-		if (pdfFile == null) return;
+		if (pdfFile == null) return;		
+		
 		const iframe = document.querySelector('#file-open-' + pdfFileIdEscaped) as HTMLIFrameElement;
 
 		setTimeout(() => {
+			
 			iframe.contentWindow?.postMessage(
 				{
 					type: 'OPEN_PDF',
 					data: {
+						id: pdfFile?.id,
 						url: pdfFile?.path,
 						bookmarks: pdfFile?.bookmarks,
 						progress: pdfFile?.progress
@@ -52,6 +54,32 @@
 				'*'
 			);
 		}, 200);
+	}
+
+	//create a listener for the pdf iframe type: 'PROGRESS',
+	window.addEventListener('message', (event) => {
+		if (event.data.type === 'PROGRESS' && event.data.data.id === pdfFileId) {
+			const id = event.data.data.id;
+			const progress = event.data.data.progress;
+			sendProgressToServer(progress, id);
+		}
+	});
+
+	function sendProgressToServer(progress: number, pdfFileId: string) {
+		const url = '/api/auth/pdffile';
+		const data = {
+			mode: 'setPdfFileProgress',
+			id: pdfFileId,
+			progress: progress
+		};
+
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		});
 	}
 
 </script>
