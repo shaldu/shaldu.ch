@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { sessionStore, collectionIdStore, pdfFileIdsStore, selectedPdfFileIdStore } from '$lib/stores';
+	import {
+		sessionStore,
+		collectionIdStore,
+		pdfFileIdsStore,
+		selectedPdfFileIdStore
+	} from '$lib/stores';
 	import { Button, ToastNotification } from 'carbon-components-svelte';
 	import type { ActionData } from './$types';
 	import Collections from '$lib/components/Collections.svelte';
@@ -67,13 +72,13 @@
 
 	//subscribe to the selectedPdfFileIdStore store
 	$: if (selectedPdfFileIdStore != null && selectedPdfFileIdStore != undefined) {
-		//fetch the pdf file
+		console.log($selectedPdfFileIdStore);
 		pdfFilePromise = fetchPdfFiles();
 	}
 
 	async function fetchPdfFiles() {
 		if ($selectedPdfFileIdStore == null || $selectedPdfFileIdStore == undefined) return;
-		
+
 		//fetch the collections from the server
 		const url = '/api/auth/pdffile?fileId=' + $selectedPdfFileIdStore ?? '';
 
@@ -85,10 +90,10 @@
 		});
 
 		const data = await response.json();
-		
+
 		return data[0];
 	}
-	
+
 	let pdfFilePromise = fetchPdfFiles();
 
 	onMount(async () => {
@@ -123,7 +128,7 @@
 				if (redirectUrl == null || redirectUrl == '' || redirectUrl == 'null') return;
 				//set the storage
 				localStorage.setItem('lastUrl', redirectUrl);
-				showRedirectToast = true;				
+				showRedirectToast = true;
 				setTimeout(() => {
 					lastUrlToast?.classList.remove('hide');
 				}, 100);
@@ -154,8 +159,8 @@
 					size="small"
 					on:click={() => {
 						window.location.href = localStorage.getItem('lastUrl');
-					}}
-				>Open tabs</Button>
+					}}>Open tabs</Button
+				>
 			</ToastNotification>
 		</div>
 	{/if}
@@ -201,11 +206,13 @@
 						</div>
 					{/if}
 				</div>
-				{#await pdfFilePromise then pdfFile}
-					{#if pdfFile != null}
-						<BookmarkCollection bookmarks={pdfFile.bookmarks}/>
-					{/if}					
-				{/await}
+				{#if $selectedPdfFileIdStore !== null}
+					{#await pdfFilePromise then pdfFile}
+						{#if pdfFile != null}
+							<BookmarkCollection bookmarks={pdfFile.bookmarks} />
+						{/if}
+					{/await}
+				{/if}
 			</div>
 		</div>
 	{:else}

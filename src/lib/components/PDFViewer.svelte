@@ -5,7 +5,7 @@
 	import PdfReader from './PDFReader.svelte';
 	import { updateLastUrl } from '$lib/auth';
 
-	let selected = $sessionStore?.account.activeFileTabIndex ?? 0;
+	let selected = 0;
 
 	type PdfFile = {
 		id: string;
@@ -76,6 +76,7 @@
 
 		setTimeout(() => {
 			$pdfFileIdsStore = temp;
+			$selectedPdfFileIdStore = $pdfFileIdsStore[0];
 			updateUrl();
 		}, 12);
 	}

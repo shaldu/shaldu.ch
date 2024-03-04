@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ArrowLeft from 'carbon-icons-svelte/lib/ArrowLeft.svelte';
-	import { collectionIdStore, pdfFileIdsStore } from '$lib/stores';
+	import { collectionIdStore, pdfFileIdsStore, selectedPdfFileIdStore } from '$lib/stores';
 	import { Modal, Button, TextInput, SkeletonText, FileUploader } from 'carbon-components-svelte';
 	import Add from 'carbon-icons-svelte/lib/Add.svelte';
 	import SingleFileCollection from './SingleFileCollection.svelte';
@@ -26,6 +26,7 @@
 			.then((response) => response.json())
 			.then((data) => {
 				fileCollection = data;
+				$selectedPdfFileIdStore = data[0].id;
 			})
 			.catch((error) => {
 				console.error('Error:', error);
