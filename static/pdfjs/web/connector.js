@@ -46,3 +46,43 @@ window.addEventListener('message', (event) => {
     PDFViewerApplication.page = page;
   }
 });
+
+//on right mouse button or mobile long press, event
+document.addEventListener('contextmenu', (event) => {
+
+  event.preventDefault();
+  const selection = window.getSelection();
+  const page = PDFViewerApplication.page;
+  closeContextMenu();
+
+    window.parent.postMessage({
+      type: 'CONTEXT_MENU_OPEN',
+      data: {
+        fileId: PDFViewerApplication.fileId,
+        selection: selection.toString(),
+        page,
+        posX: event.clientX,
+        posY: event.clientY
+      }
+    }, '*');
+});
+
+function closeContextMenu() {
+  window.parent.postMessage({
+    type: 'CONTEXT_MENU_CLOSE',
+    data: {
+      fileId: PDFViewerApplication.fileId,
+    }
+  }, '*');
+}
+
+//on escape key press, event or click outside context menu
+document.addEventListener('click', (event) => {
+  closeContextMenu();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeContextMenu();
+  }
+});
