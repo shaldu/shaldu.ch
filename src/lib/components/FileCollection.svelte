@@ -27,6 +27,7 @@
 			.then((data) => {
 				fileCollection = data;
 				$selectedPdfFileIdStore = data[0].id;
+				console.log(data[0]);				
 			})
 			.catch((error) => {
 				console.error('Error:', error);

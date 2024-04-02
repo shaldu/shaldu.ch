@@ -130,6 +130,7 @@ header {
 }
 
 .toast-notification {
+    z-index: 10;
     position: fixed;
     right: 0;
     top: calc(0 + #{$header-height});
@@ -243,4 +244,19 @@ header {
 .pdf-tab-content {
     padding: 0px;
     border-top: solid 2px black;
+}
+
+.info {
+    font-size: 12px;
+    font-weight: 400;
+    font-style: italic;
+}
+.small-text {
+    font-size: 14px;
+}
+.bookmark-tile {
+    &:hover {
+        cursor: pointer;
+    }
+    
 }

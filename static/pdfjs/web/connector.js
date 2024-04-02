@@ -8,7 +8,7 @@ window.addEventListener('message', (event) => {
         const url = event.data.data.url;
         const bookmarks = event.data.data.bookmarks;
         let progress = event.data.data.progress;
-
+        PDFViewerApplication.fileId = id;
         let currentProgress = 0;
 
         const container = document.getElementById('viewerContainer');
@@ -41,5 +41,8 @@ window.addEventListener('message', (event) => {
         }, 3000);
       }, 100);
     });
+  } else if (event.data.type && (event.data.type === 'GOTO_BOOKMARK')) {
+    const page = event.data.data.page;
+    PDFViewerApplication.page = page;
   }
 });

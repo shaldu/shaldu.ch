@@ -70,6 +70,10 @@
 	let showRedirectToast = false;
 	let lastUrlToast: HTMLDivElement | undefined | null;
 
+	function convertIdToUniqueString(id: string) {
+		return id.replaceAll(/[^a-zA-Z]/g, '');
+	}
+
 	//subscribe to the selectedPdfFileIdStore store
 	$: if (selectedPdfFileIdStore != null && selectedPdfFileIdStore != undefined) {
 		console.log($selectedPdfFileIdStore);
@@ -134,6 +138,13 @@
 				}, 100);
 			}
 		}
+		
+		setTimeout(() => {
+			const selectedEscapedFileId = convertIdToUniqueString($selectedPdfFileIdStore ?? '');
+			const tabElm = document.querySelector('[data-pdffile-tab="' + selectedEscapedFileId + '"]');
+			//@ts-ignore
+			tabElm.click();
+		}, 100);
 	});
 </script>
 
