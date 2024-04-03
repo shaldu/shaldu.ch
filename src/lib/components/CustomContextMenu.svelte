@@ -20,11 +20,14 @@
 	export let customContextMenuProps: CustomContextMenuProps;
 	export let open: boolean;
 
+
 	let bookmarkModalRef: null | any = null;
 	let bookmarkPromptShow = false;
+
 	function bookMarkPrompt() {
 		bookmarkPromptShow = true;
 	}
+
 	async function addBookmark() {
 		bookmarkPromptShow = false;
 		const form = document.querySelector('.addBookmark') as HTMLFormElement;
@@ -56,6 +59,28 @@
 				//TODO: add toast ?
 			});
 	}
+
+  let isJapanese = false;
+  function detectJapaneseSelection() {
+    const selectedText = customContextMenuProps.selectedText;
+    const japaneseRegex = /[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/;
+    isJapanese = japaneseRegex.test(selectedText);
+  }
+
+  async function jishoLookUp() {
+    const url = '/api/auth/jisho?word=' + customContextMenuProps.selectedText;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await response.json();
+    console.log(data);
+  }
+
+  detectJapaneseSelection();
 	onMount(() => {});
 </script>
 
@@ -104,21 +129,9 @@
 		}}
 	/>
 	<ContextMenuDivider />
-	<ContextMenuOption indented labelText="Export as">
-		<ContextMenuGroup labelText="Export options">
-			<ContextMenuOption id="pdf" labelText="PDF" />
-			<ContextMenuOption id="txt" labelText="TXT" />
-			<ContextMenuOption id="mp3" labelText="MP3" />
-		</ContextMenuGroup>
-	</ContextMenuOption>
-	<ContextMenuDivider />
-	<ContextMenuOption selectable labelText="Remove metadata" />
-	<ContextMenuDivider />
-	<ContextMenuGroup labelText="Style options">
-		<ContextMenuOption id="0" labelText="Font smoothing" selected />
-		<ContextMenuOption id="1" labelText="Reduce noise" />
-		<ContextMenuOption id="2" labelText="Auto-sharpen" />
-	</ContextMenuGroup>
+  {#if isJapanese }
+	  <ContextMenuOption selectable labelText="Jisho Look Up" on:click={jishoLookUp}/>
+  {/if}
 	<ContextMenuDivider />
 	<ContextMenuOption indented labelText="Add Bookmark" on:click={bookMarkPrompt} />
 </ContextMenu>

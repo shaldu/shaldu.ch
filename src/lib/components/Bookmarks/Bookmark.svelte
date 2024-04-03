@@ -9,10 +9,10 @@
     export let id: string;
  </script>
  
- <Tile class="mb-4 w-100 bookmark-tile" light on:click={selection(id)} >
-<div>
-    <h5>{title}</h5>
-    <p class="small-text">{description}</p>
-    <p class="info text-end mt">Page: {page}</p>
-</div>
+<Tile class="mb-2 w-100 bookmark-tile" light on:click={selection(id)} >
+    <div>
+        <h5>{title}</h5>
+        <p class="small-text">{description}</p>
+        <p class="info text-end mt">Page: {page}</p>
+    </div>
 </Tile>  

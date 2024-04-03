@@ -257,6 +257,14 @@ header {
 .bookmark-tile {
     &:hover {
         cursor: pointer;
+        background-color: #333333;
     }
-    
+    padding: 12px;
+
+    h5 {
+        font-size: 0.9rem;
+    }
+    p {
+        font-size: 0.7rem;
+    }
 }

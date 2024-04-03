@@ -42,6 +42,8 @@
 		"@prisma/client": "^5.7.0",
 		"jquery": "^3.7.1",
 		"popper.js": "^1.16.1",
-		"vite-plugin-top-level-await": "^1.4.1"
+		"unofficial-jisho-api": "^2.3.4",
+		"vite-plugin-top-level-await": "^1.4.1",
+		"wanakana": "^5.3.1"
 	}
 }
