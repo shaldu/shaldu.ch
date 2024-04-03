@@ -24,6 +24,7 @@
 		selectedText: string;
 		page: number;
 		position: { x: number; y: number };
+		pdfFileId: string | null;
 	};
 
 	let customContextMenuProps: CustomContextMenuProps;
@@ -92,7 +93,8 @@
 			customContextMenuProps = {
 				selectedText: textSelection,
 				page: page,
-				position: { x: positionX, y: positionY }
+				position: { x: positionX, y: positionY },
+				pdfFileId: pdfFileId ?? null
 			} as CustomContextMenuProps;
 			contextMenuOpen = true;
 		}
@@ -122,6 +124,7 @@
 			body: JSON.stringify(data)
 		});
 	}
+
 </script>
 
 {#await pdfFilePromise then pdfFile}
@@ -137,5 +140,5 @@
 {/await}
 
 {#if contextMenuOpen}
-	<CustomContextMenu {customContextMenuProps} open={contextMenuOpen}/>
+	<CustomContextMenu {customContextMenuProps} open={contextMenuOpen} />
 {/if}
