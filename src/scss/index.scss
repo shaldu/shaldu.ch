@@ -1,4 +1,3 @@
-
 $screen-sm-min: 576px;
 $screen-md-min: 768px;
 $screen-lg-min: 992px;
@@ -165,7 +164,7 @@ header {
 }
 
 .w-100 {
-    
+
     >button {
         width: 100% !important;
         max-width: 100% !important;
@@ -185,6 +184,7 @@ header {
     flex-direction: row-reverse;
     position: absolute;
     top: -22px;
+
     svg {
         position: initial !important;
     }
@@ -198,7 +198,7 @@ header {
     max-height: calc(100% - 100px);
 }
 
-.pdf-viewer  {
+.pdf-viewer {
     height: calc(100vh - 50px);
 
     .pdf-tab-content {
@@ -220,7 +220,8 @@ header {
     }
 }
 
-.pdf-viewer, iframe {
+.pdf-viewer,
+iframe {
     width: 100%;
     height: 100%;
     border: none;
@@ -228,9 +229,11 @@ header {
 
 .pdf-tab-pane-close {
     z-index: 1;
+
     &:hover {
         cursor: pointer;
     }
+
     svg {
         pointer-events: none;
     }
@@ -241,6 +244,7 @@ header {
     opacity: 0.5;
     pointer-events: none;
 }
+
 .pdf-tab-content {
     padding: 0px;
     border-top: solid 2px black;
@@ -251,20 +255,54 @@ header {
     font-weight: 400;
     font-style: italic;
 }
+
 .small-text {
     font-size: 14px;
 }
+
 .bookmark-tile {
     &:hover {
         cursor: pointer;
         background-color: #333333;
     }
+
     padding: 12px;
 
     h5 {
         font-size: 0.9rem;
     }
+
     p {
         font-size: 0.7rem;
     }
+}
+
+.bx--accordion__content {
+    padding-right: 2rem !important;
+}
+
+.highlight-text {
+    background-color: #b3cbf3;
+    opacity: 1;
+    padding: 2px 4px;
+    color: black;
+}
+.bx--accordion__title {
+    font-size: 1rem;
+}
+
+.accordion, .accordion-button, .accordion-item, .accordion-header {
+    border-radius: 0px !important;
+    border: none !important;
+    background-color: rgb(38, 38, 38) !important;
+    color: #fff !important;
+}
+.accordion-body {
+    background-color: rgb(30, 30, 30) !important;
+}
+.accordion-button {
+    background-color: rgb(23, 23, 23) !important;
+}
+.accordion-button:not(.collapsed)::after{
+    display: none !important;
 }

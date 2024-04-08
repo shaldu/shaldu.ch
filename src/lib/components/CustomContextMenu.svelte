@@ -9,17 +9,17 @@
 	} from 'carbon-components-svelte';
 	import CopyFile from 'carbon-icons-svelte/lib/CopyFile.svelte';
 	import { onMount } from 'svelte';
+	import JishoModal from './JishoModal.svelte';
 
 	type CustomContextMenuProps = {
 		selectedText: string;
 		page: number;
 		position: { x: number; y: number };
-    pdfFileId: string | null;
+		pdfFileId: string | null;
 	};
 
 	export let customContextMenuProps: CustomContextMenuProps;
 	export let open: boolean;
-
 
 	let bookmarkModalRef: null | any = null;
 	let bookmarkPromptShow = false;
@@ -39,9 +39,9 @@
 
 		const data = {
 			bookmarkTitle,
-      bookmarkDescription,
-      pdfFileId: customContextMenuProps.pdfFileId,
-      page: customContextMenuProps.page
+			bookmarkDescription,
+			pdfFileId: customContextMenuProps.pdfFileId,
+			page: customContextMenuProps.page
 		};
 
 		await fetch(url, {
@@ -60,29 +60,39 @@
 			});
 	}
 
-  let isJapanese = false;
-  function detectJapaneseSelection() {
-    const selectedText = customContextMenuProps.selectedText;
-    const japaneseRegex = /[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/;
-    isJapanese = japaneseRegex.test(selectedText);
-  }
+	let isJapanese = false;
+	function detectJapaneseSelection() {
+		const selectedText = customContextMenuProps.selectedText;
+		const japaneseRegex = /[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/;
+		isJapanese = japaneseRegex.test(selectedText);
+	}
 
-  async function jishoLookUp() {
-    const url = '/api/auth/jisho?word=' + customContextMenuProps.selectedText;
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+	let jishoModalOpen = false;
+	let jishoData: any = null;
+	async function jishoLookUp() {
+		const url = '/api/auth/jisho?word=' + customContextMenuProps.selectedText;
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
 
-    const data = await response.json();
-    console.log(data);
-  }
+		const data = await response.json();
+		if (data.status === 200) {
+			jishoData = data.body.result;
+			jishoModalOpen = true;			
+		} else {
+			console.log(data);
+		}
+	}
 
-  detectJapaneseSelection();
-	onMount(() => {});
+	detectJapaneseSelection();
 </script>
+
+{#if jishoModalOpen}
+	<JishoModal {jishoData} />
+{/if}
 
 {#if bookmarkPromptShow}
 	<Modal
@@ -129,9 +139,9 @@
 		}}
 	/>
 	<ContextMenuDivider />
-  {#if isJapanese }
-	  <ContextMenuOption selectable labelText="Jisho Look Up" on:click={jishoLookUp}/>
-  {/if}
+	{#if isJapanese}
+		<ContextMenuOption selectable labelText="Jisho Look Up" on:click={jishoLookUp} />
+	{/if}
 	<ContextMenuDivider />
 	<ContextMenuOption indented labelText="Add Bookmark" on:click={bookMarkPrompt} />
 </ContextMenu>

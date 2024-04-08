@@ -111,16 +111,18 @@ function buildUsefullInfo(phrase: JishoResult[], kanji: KanjiParseResult, exampl
 	};
 }
 
-function highlightText(text: string, highlights: string[]) {
-	//remove duplicates from highlights
-	highlights = [...new Set(highlights)];
-	
-	let htmlMainElement = '<p>';
-	for (const highlight of highlights) {
-		const regex = new RegExp(highlight, 'gi');
-		text = text.replace(regex, `<span class="highlight">${highlight}</span>`);
-	}
-	htmlMainElement += text;
-	htmlMainElement += '</p>';
-	return htmlMainElement;
+function highlightText(text:string, highlights:string[]) {
+    // Remove duplicates and empty strings from highlights
+    highlights = [...new Set(highlights)].filter(highlight => highlight.trim() !== '');
+
+    // Escape special characters in highlights for use in regular expressions
+    const escapedHighlights = highlights.map(highlight => highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+    // Create a regular expression pattern to match any of the highlights
+    const pattern = new RegExp(`(${escapedHighlights.join('|')})`, 'gi');
+
+    // Replace matches with highlighted versions
+    const highlightedText = text.replace(pattern, '<span class="highlight-text">$1</span>');
+
+    return `<p>${highlightedText}</p>`;
 }
