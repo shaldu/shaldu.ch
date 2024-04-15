@@ -12,8 +12,6 @@ export async function GET({ request, locals, url }) {
 	const session = await locals.getSession() as CustomSession;
 	const accountId = session.account.id;
 	const word = url.searchParams.get('word') as string;
-	
-
 
 	const resultPhrase = await jisho.searchForPhrase(word).then(result => {
 		return result.data;

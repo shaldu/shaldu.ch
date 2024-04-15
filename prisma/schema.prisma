@@ -59,9 +59,10 @@ model WordCollection {
   id                String          @id @default(uuid())
   title             String
   definition        String
-  favorite          Boolean
+  color             String
   learnCollectionId String
   learnCollection   LearnCollection @relation(fields: [learnCollectionId], references: [id])
+  page              Int
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 }

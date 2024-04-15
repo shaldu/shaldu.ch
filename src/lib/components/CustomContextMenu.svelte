@@ -10,7 +10,8 @@
 	import CopyFile from 'carbon-icons-svelte/lib/CopyFile.svelte';
 	import { onMount } from 'svelte';
 	import JishoModal from './JishoModal.svelte';
-
+	import WordCollectionModal from './WordCollectionModal.svelte';
+	
 	type CustomContextMenuProps = {
 		selectedText: string;
 		page: number;
@@ -20,6 +21,17 @@
 
 	export let customContextMenuProps: CustomContextMenuProps;
 	export let open: boolean;
+
+	let wordCollectionModalRef: null | any = null;
+	let wordCollectionPromptShow = false;
+
+	function wordCollectionPrompt() {
+		wordCollectionPromptShow = true;
+	}
+
+	function closeWordCollectionModal() {
+		wordCollectionPromptShow = false;
+	}
 
 	let bookmarkModalRef: null | any = null;
 	let bookmarkPromptShow = false;
@@ -42,6 +54,7 @@
 			bookmarkDescription,
 			pdfFileId: customContextMenuProps.pdfFileId,
 			page: customContextMenuProps.page
+			
 		};
 
 		await fetch(url, {
@@ -81,7 +94,7 @@
 		const data = await response.json();
 		if (data.status === 200) {
 			jishoData = data.body.result;
-			jishoModalOpen = true;			
+			jishoModalOpen = true;
 		} else {
 			console.log(data);
 		}
@@ -129,6 +142,10 @@
 	</Modal>
 {/if}
 
+{#if wordCollectionPromptShow}
+	<WordCollectionModal title={customContextMenuProps.selectedText} closeModal={closeWordCollectionModal} page={customContextMenuProps.page} />
+{/if}
+
 <ContextMenu {open} x={customContextMenuProps.position.x} y={customContextMenuProps.position.y}>
 	<ContextMenuOption
 		indented
@@ -139,9 +156,8 @@
 		}}
 	/>
 	<ContextMenuDivider />
-	{#if isJapanese}
-		<ContextMenuOption selectable labelText="Jisho Look Up" on:click={jishoLookUp} />
-	{/if}
+	<ContextMenuOption selectable labelText="Jisho Look Up" on:click={jishoLookUp} />
 	<ContextMenuDivider />
 	<ContextMenuOption indented labelText="Add Bookmark" on:click={bookMarkPrompt} />
+	<ContextMenuOption indented labelText="Create Word" on:click={wordCollectionPrompt} />
 </ContextMenu>

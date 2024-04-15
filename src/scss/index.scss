@@ -306,3 +306,17 @@ iframe {
 .accordion-button:not(.collapsed)::after{
     display: none !important;
 }
+.color-picker-group {
+    display: flex;
+    flex-direction: column;
+
+    .color-picker {
+        margin-top: 10px;
+        display: flex;
+
+        .wrapper {
+            position: relative;
+            top: 0;
+        }
+    }
+}
