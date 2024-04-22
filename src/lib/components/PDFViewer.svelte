@@ -102,22 +102,21 @@
 		return id.replaceAll(/[^a-zA-Z]/g, '');
 	}
 
-	//add keyevent to close tab
-	window.addEventListener('keydown', (event) => {
-		//delete key or backspace key
-		if (
-			(event.key === 'w' && event.ctrlKey) ||
-			(event.key === 'w' && event.metaKey) ||
-			(event.key === 'w' && event.altKey) ||
-			event.key === 'Backspace'
-		) {
-			//close the tab
-			if ($pdfFileIdsStore == null) return;
-			if (document.activeElement?.classList.contains('bx--tabs__nav-link')) {
-			}
-			closeTab($pdfFileIdsStore[selected]);
-		}
-	});
+	// //add keyevent to close tab
+	// document.activeElement.addEventListener('keydown', (event) => {
+	// 	//delete key or backspace key
+	// 	if (
+	// 		(event.key === 'w' && event.ctrlKey) ||
+	// 		(event.key === 'w' && event.metaKey) ||
+	// 		(event.key === 'w' && event.altKey)
+	// 	) {
+	// 		//close the tab
+	// 		if ($pdfFileIdsStore == null) return;
+	// 		if (document.activeElement?.classList.contains('bx--tabs__nav-link')) {
+	// 		}
+	// 		closeTab($pdfFileIdsStore[selected]);
+	// 	}
+	// });
 </script>
 
 {#if $pdfFileIdsStore != null}

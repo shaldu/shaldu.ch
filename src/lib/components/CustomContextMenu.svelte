@@ -82,6 +82,7 @@
 
 	let jishoModalOpen = false;
 	let jishoData: any = null;
+	let wordDefinition = '';
 	async function jishoLookUp() {
 		const url = '/api/auth/jisho?word=' + customContextMenuProps.selectedText;
 		const response = await fetch(url, {
@@ -100,11 +101,16 @@
 		}
 	}
 
+	async function addWordDefinitionFromJisho(wordDefinitionString: string) {
+		wordDefinition = wordDefinitionString;		
+		wordCollectionPromptShow = true;		
+	}
+
 	detectJapaneseSelection();
 </script>
 
 {#if jishoModalOpen}
-	<JishoModal {jishoData} />
+	<JishoModal {jishoData} addWordDefinition={addWordDefinitionFromJisho} />
 {/if}
 
 {#if bookmarkPromptShow}
@@ -143,7 +149,7 @@
 {/if}
 
 {#if wordCollectionPromptShow}
-	<WordCollectionModal title={customContextMenuProps.selectedText} closeModal={closeWordCollectionModal} page={customContextMenuProps.page} />
+	<WordCollectionModal title={customContextMenuProps.selectedText} closeModal={closeWordCollectionModal} page={customContextMenuProps.page} definition={wordDefinition} />
 {/if}
 
 <ContextMenu {open} x={customContextMenuProps.position.x} y={customContextMenuProps.position.y}>

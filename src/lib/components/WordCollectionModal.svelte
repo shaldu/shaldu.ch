@@ -43,7 +43,7 @@
 		const url = '/api/auth/wordcollection';
 		const wordTitle = formData.get('wordTitle') as string ;
 		const wordDefinition = formData.get('wordDefinition') as string || '';
-
+        
 		const data = {
             wordTitle,
 			wordDefinition,
@@ -94,13 +94,14 @@
             labelText="Word title"
             name="wordTitle"
             placeholder="Enter Word title..."
+            value={title}
         />
     </div>
     <div class="mt-2">
         <TextArea
             light
             labelText="Word definition"
-            name="WordDefinition"
+            name="wordDefinition"
             placeholder="Enter Word definition..."
             value={definition}
         ></TextArea>

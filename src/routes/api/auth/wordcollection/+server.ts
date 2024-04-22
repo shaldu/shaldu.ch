@@ -48,4 +48,12 @@ export async function POST({ request, locals, url }) {
         }
     });
 
+    return json({
+        status: 200,
+        body: {
+            message: 'Word added successfully',
+            caption: '<p>Word added successfully</p>'
+        }
+    });
+
 }

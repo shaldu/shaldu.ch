@@ -45,7 +45,7 @@
 	};
 
 	export let jishoData: JishoData;
-	console.log(jishoData);
+	export let addWordDefinition: (wordDefinitionString: string) => void;
 
 	const openPhrase = () => {
 		if (jishoData.phraseData && jishoData.kanjiData == null) {
@@ -53,14 +53,88 @@
 		}
 	};
 
-	
+	function createWordDefinition() {
+		let wordDefinitionString = '';
+		//create a string with the important information
+		//with breaklines etc
+
+		if (jishoData.phraseData) {
+			if (jishoData.phraseData.word) {
+				wordDefinitionString += `Word: ${jishoData.phraseData.word}\n`;
+			}
+			// wordDefinitionString += `Reading: ${jishoData.phraseData.reading}\n`;
+			if (jishoData.phraseData.reading) {
+				wordDefinitionString += `Reading: ${jishoData.phraseData.reading}\n`;
+			}
+			// wordDefinitionString += `Romaji: ${jishoData.phraseData.romaji}\n`;			
+			if (jishoData.phraseData.romaji) {
+				wordDefinitionString += `Romaji: ${jishoData.phraseData.romaji}\n`;
+			}
+			// wordDefinitionString += `Definition 1: ${jishoData.phraseData.definition1}\n`;
+			if (jishoData.phraseData.definition1) {
+				wordDefinitionString += `Definition 1: ${jishoData.phraseData.definition1}\n`;
+			}
+			// wordDefinitionString += `Definition 2: ${jishoData.phraseData.definition2}\n`;
+			if (jishoData.phraseData.definition2) {
+				wordDefinitionString += `Definition 2: ${jishoData.phraseData.definition2}\n`;
+			}
+			
+		}
+
+		if (jishoData.kanjiData) {
+			// wordDefinitionString += `Kanji: ${jishoData.searchTerm}\n`;
+			// wordDefinitionString += `Meaning: ${jishoData.kanjiData.meaning}\n`;
+			// wordDefinitionString += `Kunyomi: ${jishoData.kanjiData.kunyomi}\n`;
+			// wordDefinitionString += `Onyomi: ${jishoData.kanjiData.onyomi}\n`;
+			// wordDefinitionString += `Kunyomi Example: ${jishoData.kanjiData.kunyomiExamples.example}\n`;
+			// wordDefinitionString += `Kunyomi Reading: ${jishoData.kanjiData.kunyomiExamples.reading}\n`;
+			// wordDefinitionString += `Kunyomi Meaning: ${jishoData.kanjiData.kunyomiExamples.meaning}\n`;
+			// wordDefinitionString += `Onyomi Example: ${jishoData.kanjiData.onyomiExamples.example}\n`;
+			// wordDefinitionString += `Onyomi Reading: ${jishoData.kanjiData.onyomiExamples.reading}\n`;
+			// wordDefinitionString += `Onyomi Meaning: ${jishoData.kanjiData.onyomiExamples.meaning}\n`;
+
+			if (jishoData.kanjiData.meaning) {
+				wordDefinitionString += `Meaning: ${jishoData.kanjiData.meaning}\n`;
+			}
+			if (jishoData.kanjiData.kunyomi) {
+				wordDefinitionString += `Kunyomi: ${jishoData.kanjiData.kunyomi}\n`;
+			}
+			if (jishoData.kanjiData.onyomi) {
+				wordDefinitionString += `Onyomi: ${jishoData.kanjiData.onyomi}\n`;
+			}
+			if (jishoData.kanjiData.kunyomiExamples.example) {
+				wordDefinitionString += `Kunyomi Example: ${jishoData.kanjiData.kunyomiExamples.example}\n`;
+			}
+			if (jishoData.kanjiData.kunyomiExamples.reading) {
+				wordDefinitionString += `Kunyomi Reading: ${jishoData.kanjiData.kunyomiExamples.reading}\n`;
+			}
+			if (jishoData.kanjiData.kunyomiExamples.meaning) {
+				wordDefinitionString += `Kunyomi Meaning: ${jishoData.kanjiData.kunyomiExamples.meaning}\n`;
+			}
+			if (jishoData.kanjiData.onyomiExamples.example) {
+				wordDefinitionString += `Onyomi Example: ${jishoData.kanjiData.onyomiExamples.example}\n`;
+			}
+			if (jishoData.kanjiData.onyomiExamples.reading) {
+				wordDefinitionString += `Onyomi Reading: ${jishoData.kanjiData.onyomiExamples.reading}\n`;
+			}
+			if (jishoData.kanjiData.onyomiExamples.meaning) {
+				wordDefinitionString += `Onyomi Meaning: ${jishoData.kanjiData.onyomiExamples.meaning}\n`;
+			}
+
+		}
+
+		addWordDefinition(wordDefinitionString);
+	}
 </script>
 
 <Modal
-	passiveModal
 	open
 	modalHeading="Jisho information, about: {jishoData.searchTerm}"
+	primaryButtonText="Create Word"
 	preventCloseOnClickOutside
+	on:click:button--primary={() => {
+		createWordDefinition();
+	}}
 >
 	<Accordion align="start">
 		{#if jishoData.kanjiData}
@@ -69,7 +143,7 @@
 					<p>
 						Meaning: {jishoData.kanjiData.meaning}<br />
 						Frequency: {jishoData.kanjiData.frequency} / 2500<br />
-                        More information: <a href={jishoData.kanjiData.uri} target="_blank">Jisho</a>
+						More information: <a href={jishoData.kanjiData.uri} target="_blank">Jisho</a>
 					</p>
 					<hr class="hr" />
 
@@ -96,14 +170,20 @@
 							>
 								<div class="accordion-body">
 									Strokes: {jishoData.kanjiData.strokes}<br />
-									<div style="background-color: #393265;padding:5px;margin-top:5px;width:fit-content;">
-										<img height="150" src={jishoData.kanjiData.strokeImage} alt="Kanji Stroke Order" />
+									<div
+										style="background-color: #393265;padding:5px;margin-top:5px;width:fit-content;"
+									>
+										<img
+											height="150"
+											src={jishoData.kanjiData.strokeImage}
+											alt="Kanji Stroke Order"
+										/>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-                    <div class="accordion mt-2" id="kunyomiAccordion">
+					<div class="accordion mt-2" id="kunyomiAccordion">
 						<div class="accordion-item">
 							<h2 class="accordion-header" id="headingKunyomi">
 								<button
@@ -126,16 +206,16 @@
 							>
 								<div class="accordion-body">
 									Kunyomi: {jishoData.kanjiData.kunyomi}<br />
-                                    <hr class="hr" />
-                                    Example: {jishoData.kanjiData.kunyomiExamples.example}<br />
-                                    Reading: {jishoData.kanjiData.kunyomiExamples.reading}<br />
-                                    Meaning: {jishoData.kanjiData.kunyomiExamples.meaning}<br />
+									<hr class="hr" />
+									Example: {jishoData.kanjiData.kunyomiExamples.example}<br />
+									Reading: {jishoData.kanjiData.kunyomiExamples.reading}<br />
+									Meaning: {jishoData.kanjiData.kunyomiExamples.meaning}<br />
 								</div>
 							</div>
 						</div>
 					</div>
 
-                    <div class="accordion mt-2" id="onyomiAccordion">
+					<div class="accordion mt-2" id="onyomiAccordion">
 						<div class="accordion-item">
 							<h2 class="accordion-header" id="headingonyomi">
 								<button
@@ -158,10 +238,10 @@
 							>
 								<div class="accordion-body">
 									Onyomi: {jishoData.kanjiData.onyomi}<br />
-                                    <hr class="hr" />
-                                    Example: {jishoData.kanjiData.onyomiExamples.example}<br />
-                                    Reading: {jishoData.kanjiData.onyomiExamples.reading}<br />
-                                    Meaning: {jishoData.kanjiData.onyomiExamples.meaning}<br />
+									<hr class="hr" />
+									Example: {jishoData.kanjiData.onyomiExamples.example}<br />
+									Reading: {jishoData.kanjiData.onyomiExamples.reading}<br />
+									Meaning: {jishoData.kanjiData.onyomiExamples.meaning}<br />
 								</div>
 							</div>
 						</div>
