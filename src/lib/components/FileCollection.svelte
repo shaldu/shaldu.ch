@@ -27,7 +27,7 @@
 			.then((data) => {
 				fileCollection = data;
 				$selectedPdfFileIdStore = data[0].id;
-				console.log(data[0]);				
+				console.log(data[0]);
 			})
 			.catch((error) => {
 				console.error('Error:', error);
@@ -68,67 +68,73 @@
 	};
 </script>
 
-<div class="collection card">
-	<div class="card-body">
-		<div class="w-100 position-relative h-100">
+<div class="file-panel">
+	<div class="card">
+		<div class="card-body">
 			<Button
 				class="w-100 back-to"
 				size="small"
 				icon={ArrowLeft}
 				on:click={() => {
 					$collectionIdStore = null;
-
 				}}>Back to collections</Button
 			>
 			<h5 class="card-title mb-4 mt-4">File Collection</h5>
-			<div class="collection-holder w-100">
-				{#if fileCollection != null && fileCollection.length > 0}
-					{#each fileCollection as file, index}
-						<SingleFileCollection title={file.title} id={file.id} {selection} selected={$pdfFileIdsStore?.includes(file.id)} />
-					{/each}
-				{:else if fileCollection == undefined}
-					<SkeletonText heading />
-				{:else}
-					<div class="text-center">
-						<p>You don't have any Files yet.</p>
-					</div>
-				{/if}
+			<div class="w-100 position-relative">
+				<div class="file-holder w-100">
+					{#if fileCollection != null && fileCollection.length > 0}
+						{#each fileCollection as file, index}
+							<SingleFileCollection
+								title={file.title}
+								id={file.id}
+								{selection}
+								selected={$pdfFileIdsStore?.includes(file.id)}
+							/>
+						{/each}
+					{:else if fileCollection == undefined}
+						<SkeletonText heading />
+					{:else}
+						<div class="text-center">
+							<p>You don't have any Files yet.</p>
+						</div>
+					{/if}
+				</div>
 			</div>
+			<Button class="w-100" icon={Add} on:click={() => (open = true)}>Upload PDF File</Button>
+			<Modal
+				bind:open
+				modalHeading="Upload PDF File"
+				primaryButtonText="Create"
+				secondaryButtonText="Cancel"
+				on:click:button--secondary={() => (open = false)}
+				on:click:button--primary={() => {
+					open = false;
+					addFileFormElm.submit();
+				}}
+				on:open
+				on:close
+				on:submit
+			>
+				<div>
+					<input type="hidden" name="collectionId" value={$collectionIdStore} />
+					<TextInput
+						light
+						labelText="Document title"
+						name="fileTitle"
+						placeholder="Enter document title..."
+					/>
+					<FileUploader
+						class="mt-4"
+						multiple={false}
+						labelTitle="Upload PDF File"
+						buttonLabel="Add PDF"
+						labelDescription="Only PDF files are accepted."
+						accept={['.pdf']}
+						status="complete"
+						name="fileUpload"
+					/>
+				</div>
+			</Modal>
 		</div>
-		<Button class="w-100" icon={Add} on:click={() => (open = true)}>Upload PDF File</Button>
-		<Modal
-			bind:open
-			modalHeading="Upload PDF File"
-			primaryButtonText="Create"
-			secondaryButtonText="Cancel"
-			on:click:button--secondary={() => (open = false)}
-			on:click:button--primary={() => {
-				open = false;
-				addFileFormElm.submit();
-			}}
-			on:open
-			on:close
-			on:submit
-		>
-			<div>
-				<input type="hidden" name="collectionId" value={$collectionIdStore} />
-				<TextInput
-					light
-					labelText="Document title"
-					name="fileTitle"
-					placeholder="Enter document title..."
-				/>
-				<FileUploader
-					class="mt-4"
-					multiple={false}
-					labelTitle="Upload PDF File"
-					buttonLabel="Add PDF"
-					labelDescription="Only PDF files are accepted."
-					accept={['.pdf']}
-					status="complete"
-					name="fileUpload"
-				/>
-			</div>
-		</Modal>
 	</div>
 </div>

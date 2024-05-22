@@ -21,10 +21,20 @@ export async function GET({ request, locals, url }) {
 		},		
 		include: {
 			bookmarks: true,
+			learnCollection: true,
+		}
+	});
+	const collectionId = collections[0].learnCollectionId;
+	//get all the words for the collections
+	const words = await prisma.wordCollection.findMany({
+		where: {
+			learnCollectionId: collectionId
 		}
 	});
 
-	
+	//@ts-ignore
+	collections[0].words = words ?? [];
+
 	// return the collections
 	return json(collections);
 }

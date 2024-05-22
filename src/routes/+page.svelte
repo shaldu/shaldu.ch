@@ -14,6 +14,7 @@
 	import PdfViewer from '$lib/components/PDFViewer.svelte';
 	import { onMount } from 'svelte';
 	import BookmarkCollection from '$lib/components/Bookmarks/BookmarkCollection.svelte';
+	import WordCollection from '$lib/components/Words/WordCollection.svelte';
 
 	//get the url parameters
 	const urlParams = new URLSearchParams(window.location.search);
@@ -138,7 +139,7 @@
 				}, 100);
 			}
 		}
-		
+
 		setTimeout(() => {
 			const selectedEscapedFileId = convertIdToUniqueString($selectedPdfFileIdStore ?? '');
 			const tabElm = document.querySelector('[data-pdffile-tab="' + selectedEscapedFileId + '"]');
@@ -205,9 +206,17 @@
 							action="?/createFileCollection"
 							method="post"
 							bind:this={addFileFormElm}
+							class="file-collection-form"
 						>
 							<FileCollection {addFileFormElm} />
 						</form>
+						{#if $selectedPdfFileIdStore !== null}
+							{#await pdfFilePromise then pdfFile}
+								{#if pdfFile != null}
+									<WordCollection words={pdfFile.words} />
+								{/if}
+							{/await}
+						{/if}
 					{/if}
 				</div>
 				<div class="col">
@@ -219,7 +228,7 @@
 				</div>
 				{#if $selectedPdfFileIdStore !== null}
 					{#await pdfFilePromise then pdfFile}
-						{#if pdfFile != null}
+						{#if pdfFile != null && $collectionIdStore != null && $collectionIdStore != undefined && $collectionIdStore != ''}
 							<BookmarkCollection bookmarks={pdfFile.bookmarks} />
 						{/if}
 					{/await}

@@ -173,17 +173,47 @@ header {
 
 .left-side-panel {
     min-width: 350px;
+    height: calc(100dvh - $header-height);
+    display: flex;
+    flex-direction: column;
+
+    .words-panel,
+    .file-panel,
+    .file-collection-form {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        .card {
+            height: 100%;
+            overflow: overlay;
+        }
+    }
 
     @include sm {
         max-width: 350px;
     }
 
+    .file-panel {
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+
+            .w-100.position-relative {
+                max-height: 85%;
+                overflow: scroll;
+                overflow-x: hidden;
+                margin-bottom: 25px;
+            }
+        }
+    }
 }
 
 .back-to {
     flex-direction: row-reverse;
-    position: absolute;
-    top: -22px;
+    position: relative;
 
     svg {
         position: initial !important;
@@ -287,25 +317,33 @@ iframe {
     padding: 2px 4px;
     color: black;
 }
+
 .bx--accordion__title {
     font-size: 1rem;
 }
 
-.accordion, .accordion-button, .accordion-item, .accordion-header {
+.accordion,
+.accordion-button,
+.accordion-item,
+.accordion-header {
     border-radius: 0px !important;
     border: none !important;
     background-color: rgb(38, 38, 38) !important;
     color: #fff !important;
 }
+
 .accordion-body {
     background-color: rgb(30, 30, 30) !important;
 }
+
 .accordion-button {
     background-color: rgb(23, 23, 23) !important;
 }
-.accordion-button:not(.collapsed)::after{
+
+.accordion-button:not(.collapsed)::after {
     display: none !important;
 }
+
 .color-picker-group {
     display: flex;
     flex-direction: column;
@@ -320,3 +358,66 @@ iframe {
         }
     }
 }
+
+
+
+/* Chrome, Edge and Safari */
+*::-webkit-scrollbar {
+    width: 0px;
+    border-radius: 0px;
+  }
+  *::-webkit-scrollbar-track {
+    background-color: #ffffff00;
+    border-radius: 0px;
+  }
+  
+  *::-webkit-scrollbar-track:hover {
+    background-color: #ffffff00;
+  }
+  
+  *::-webkit-scrollbar-track:active {
+    background-color: #ffffff00;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--bs-primary);
+    border-radius: 0px;
+  }
+  
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--bs-primary);
+  }
+  
+  *::-webkit-scrollbar-thumb:active {
+    background-color: var(--bs-primary);
+  }
+  .single-word {
+    .inner {
+        display: flex;
+        justify-items: center;
+
+        .word-title {
+            margin-left: 10px;
+            margin-top: 5px;
+        }
+    }
+
+    .word-definition {
+        margin-top: 5px;
+        width: 110%;
+        .bx--text-area {
+            padding: 0px;
+            background-color: transparent;
+        }
+    }
+  }
+
+  .color-display {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+
+    &.true-mark-color {
+        opacity: 0.25;
+    }
+  }

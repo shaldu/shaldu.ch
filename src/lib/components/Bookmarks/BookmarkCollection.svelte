@@ -16,7 +16,7 @@
 		if (bookmark) {
 			const pdfFileIdEscaped = convertIdToUniqueString(bookmark.pdfFileId);
 			const iframe = document.querySelector('#file-open-' + pdfFileIdEscaped) as HTMLIFrameElement;
-			
+
 			iframe.contentWindow?.postMessage(
 				{
 					type: 'GOTO_BOOKMARK',
@@ -41,19 +41,21 @@
 
 {#if bookmarks.length > 0}
 	<div class="right-side-panel col-12 col-md-2">
-		<div class="card h-100">
-			<div class="card-body">
-				<div class="w-100 h-100 position-relative">
-					<h5 class="card-title mb-4 mt-4">Bookmarks</h5>
-					{#each bookmarks as bookmark}
-						<Bookmark
-							title={bookmark.title}
-							description={bookmark.description}
-							page={bookmark.page}
-							selection={() => selection(bookmark.id)}
-							id={bookmark.id}
-						/>
-					{/each}
+		<div class="bookmarks-panel">
+			<div class="card h-100">
+				<div class="card-body">
+					<div class="w-100 h-100 position-relative">
+						<h5 class="card-title mb-4 mt-4">Bookmarks</h5>
+						{#each bookmarks as bookmark}
+							<Bookmark
+								title={bookmark.title}
+								description={bookmark.description}
+								page={bookmark.page}
+								selection={() => selection(bookmark.id)}
+								id={bookmark.id}
+							/>
+						{/each}
+					</div>
 				</div>
 			</div>
 		</div>

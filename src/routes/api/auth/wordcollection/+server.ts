@@ -57,3 +57,21 @@ export async function POST({ request, locals, url }) {
     });
 
 }
+
+export async function GET({ params, locals }) {
+    // get the session
+    const session = await locals.getSession() as CustomSession;
+    if (session === undefined || session.account === undefined) {
+        return json({ message: 'Unauthorized' });
+    }
+
+    const accountId = session.account.id;
+    
+
+    return json({
+        status: 200,
+        body: {
+            words: {}
+        }
+    });
+}
