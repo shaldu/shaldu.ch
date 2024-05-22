@@ -365,33 +365,35 @@ iframe {
 *::-webkit-scrollbar {
     width: 0px;
     border-radius: 0px;
-  }
-  *::-webkit-scrollbar-track {
+}
+
+*::-webkit-scrollbar-track {
     background-color: #ffffff00;
     border-radius: 0px;
-  }
-  
-  *::-webkit-scrollbar-track:hover {
+}
+
+*::-webkit-scrollbar-track:hover {
     background-color: #ffffff00;
-  }
-  
-  *::-webkit-scrollbar-track:active {
+}
+
+*::-webkit-scrollbar-track:active {
     background-color: #ffffff00;
-  }
-  
-  *::-webkit-scrollbar-thumb {
+}
+
+*::-webkit-scrollbar-thumb {
     background-color: var(--bs-primary);
     border-radius: 0px;
-  }
-  
-  *::-webkit-scrollbar-thumb:hover {
+}
+
+*::-webkit-scrollbar-thumb:hover {
     background-color: var(--bs-primary);
-  }
-  
-  *::-webkit-scrollbar-thumb:active {
+}
+
+*::-webkit-scrollbar-thumb:active {
     background-color: var(--bs-primary);
-  }
-  .single-word {
+}
+
+.single-word {
     .inner {
         display: flex;
         justify-items: center;
@@ -405,14 +407,15 @@ iframe {
     .word-definition {
         margin-top: 5px;
         width: 110%;
+
         .bx--text-area {
             padding: 0px;
             background-color: transparent;
         }
     }
-  }
+}
 
-  .color-display {
+.color-display {
     height: 25px;
     width: 25px;
     border-radius: 50%;
@@ -420,4 +423,12 @@ iframe {
     &.true-mark-color {
         opacity: 0.25;
     }
-  }
+}
+
+.right-side-panel {
+    display: block;
+}
+
+.right-side-panel.faded-out {
+    display: none;
+}

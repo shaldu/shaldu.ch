@@ -40,7 +40,7 @@
 </script>
 
 {#if bookmarks.length > 0}
-	<div class="right-side-panel col-12 col-md-2">
+	<div class="right-side-panel col-12 col-md-2 faded-out">
 		<div class="bookmarks-panel">
 			<div class="card h-100">
 				<div class="card-body">
