@@ -9,11 +9,18 @@
 	export let selection: Function;
 	export let color: string;
 	export let selected = false;
+
+
+	function convertIdToUniqueString(id: string) {
+		return id.replaceAll(/[^a-zA-Z]/g, '');
+	}
+
 </script>
 
 <SelectableTile
-	class="mb-4 w-100 single-word"
+	class="mb-4 w-100 single-word {convertIdToUniqueString(id)}"
 	light
+	id={convertIdToUniqueString(id)}
 	on:click={selection({title, definition, color, id}, !selected)}
 	bind:selected
 >

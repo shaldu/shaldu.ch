@@ -121,12 +121,22 @@ function markWord(title, color, id) {
         textDiv.appendChild(document.createTextNode(after));
         span.setAttribute('data-word-id', id);
         span.classList.add('marked-word');
-
+        span.onclick = () => {
+          clickedMarkWord(id);
+        }
       }
     });
 
   });
-  
+}
+
+function clickedMarkWord(id) {
+  window.parent.postMessage({
+    type: 'MARK_WORD_CLICK',
+    data: {
+      id
+    }
+  }, '*');
 }
 
 function checkIfWordExists(text, word) {

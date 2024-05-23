@@ -30,6 +30,9 @@
 		const iframe = document.querySelector('#file-open-' + pdfFileIdEscaped) as HTMLIFrameElement;
 
 		let type = isSelected ? 'MARK_WORD' : 'UNMARK_WORD';
+		if (iframe?.contentWindow === null || iframe?.contentWindow === undefined) {
+			return;
+		}
 		iframe.contentWindow?.postMessage(
 			{
 				type: type,
@@ -43,6 +46,27 @@
 			'*'
 		);
 	};
+
+	//listen to MARK_WORD_CLICK event
+	// IMPORTANT !! ALWAYS COMPARE THE FILE ID
+	window.addEventListener('message', (event) => {
+		if (event.data.type === 'MARK_WORD_CLICK') {
+			const wordId = event.data.data.id;
+			//find the word element with the id
+			const wordElementId = '.' + wordId;
+			const wordElement = document.querySelector(wordElementId);
+			
+			//set the border color
+			if (wordElement !== null && wordElement !== undefined) {
+				wordElement.style.borderColor = 'green';
+				//scroll to the element
+				wordElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				setTimeout(() => {
+					wordElement.style.borderColor = 'white';
+				}, 3000);
+			}
+		}
+	});
 </script>
 
 {#if words.length > 0}
