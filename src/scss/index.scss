@@ -76,6 +76,10 @@ $header-height: 50px;
 header {
     position: relative !important;
     height: $header-height;
+
+    .bx--header__nav {
+        display: block !important;
+    }
 }
 
 .card {
@@ -431,4 +435,58 @@ iframe {
 
 .right-side-panel.faded-out {
     display: none;
+}
+.word-shifter {
+    display: none;
+}
+@media screen and (max-width: 576px) {
+    .pdf-viewer .bx--tabs-trigger{
+        background:#001948;
+    }   
+    .left-side-panel, .words-panel {
+        box-shadow: 0px -5px 20px 0px black;
+    }
+    .left-side-panel {
+        height: auto;
+
+        .file-collection-form {
+            height: auto;
+        }
+    }
+    .word-shifter {
+        height: 30px;
+        width: 100%;
+        background-color: #3e3e3e;
+        background-color: #001948;
+        display: block;
+
+
+    }
+    .words-panel {
+        overflow: hidden !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 122;
+        width: 100%;
+        height: 100px !important;
+
+        transition: height 0.3s ease-in-out;
+        h5 {
+            margin-top: 0px !important;
+        }
+
+        &.active {
+            height: 40dvh !important;
+        }
+    }
+    .pdf-viewer {
+        padding-right: 15px;
+        background-color: #001948;
+    }
+    .card-body button {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-right: 15px !important;
+    }
 }

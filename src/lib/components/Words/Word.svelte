@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Tile } from 'carbon-components-svelte';
 	import { Button, SelectableTile, TextArea } from 'carbon-components-svelte';
-
+	import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
 	export let title = 'undefined';
 	export let page = 0;
 	export let definition = 'undefined';
@@ -37,5 +37,10 @@
                 readonly
             />
 		</div>
+	{/if}
+	{#if selected}
+	<div class="close mt-3">
+		<Button size="small" kind="danger-tertiary" iconDescription="Delete" icon={TrashCan} on:click={selection({title, definition, color, id}, !selected, true)} />
+	</div>
 	{/if}
 </SelectableTile>

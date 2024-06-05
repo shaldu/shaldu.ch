@@ -21,7 +21,7 @@
 		}[];
 	} | null;
 
-	let pdfFileNames: string[] = [];
+	let pdfFileNames: string[] = fetchPdfFileName() ?? [];
 
 	//subscribe to the store
 	$: $pdfFileIdsStore;
@@ -61,6 +61,8 @@
 		if ($pdfFileIdsStore == null) return;
 		event.preventDefault();
 		const target = event.target as HTMLElement;
+		
+		
 		if (!target?.classList.contains('pdf-tab-pane-close')){
 			$selectedPdfFileIdStore = id;
 			
@@ -117,12 +119,14 @@
 	// 		closeTab($pdfFileIdsStore[selected]);
 	// 	}
 	// });
+
+	
 </script>
 
 {#if $pdfFileIdsStore != null}
 	<Tabs type="container" bind:selected>
 		{#each $pdfFileIdsStore as pdfFileId, index}
-			<Tab on:click={(event) => onTabClick(event, pdfFileId)}>
+			<Tab on:click={(event) => onTabClick(event, pdfFileId)} label="Select PDF File">				
 				<span class="pdf-tab-pane" data-pdffile-tab={convertIdToUniqueString(pdfFileId)}>
 					<div class="pdf-tab-pane-text">
 						<Truncate>{pdfFileNames[pdfFileId]}</Truncate>

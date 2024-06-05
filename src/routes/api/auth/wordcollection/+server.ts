@@ -75,3 +75,31 @@ export async function GET({ params, locals }) {
         }
     });
 }
+
+export async function DELETE({ params, locals, url }) {
+    // get the session
+    const session = await locals.getSession() as CustomSession;
+    if (session === undefined || session.account === undefined) {
+        return json({ message: 'Unauthorized' });
+    }
+
+    const accountId = session.account.id;
+    const wordId = url.searchParams.get('wordid') as string;
+    console.log(wordId);
+    
+
+    //todo delete the word from the database
+    const word = await prisma.wordCollection.delete({
+        where: {
+            id: wordId
+        }
+    });
+
+    return json({
+        status: 200,
+        body: {
+            message: 'Word deleted successfully',
+            caption: '<p>Word deleted successfully</p>'
+        }
+    });
+}
