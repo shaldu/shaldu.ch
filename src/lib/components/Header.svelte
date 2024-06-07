@@ -26,6 +26,7 @@
 		{#if $sessionStore?.user}
 			<div class="main-navigation-bar-left">
 				<HeaderNavItem href="/" text="Home" />
+				<HeaderNavItem href="/cards" text="Cards" />
 			</div>
 			<div class="main-navigation-bar-right">
 				{#if $sessionStore?.user?.image}
