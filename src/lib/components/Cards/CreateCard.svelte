@@ -9,6 +9,9 @@
 	let subtitle = 'An internal server error occurred.';
 	let caption = 'Something went wrong.';
 
+	export let title: string = '';
+	export let definition: string = '';
+
 	async function createCard() {
 		const url = '/api/auth/cards';
 
@@ -71,7 +74,7 @@
     />
 </div>
 <div class="card">
-	<div class="card-body">d
+	<div class="card-body">
 		<div class="row justify-content-between">
 			<div class="col-12 col-md-6 mt-2">
 				<TextArea
@@ -79,7 +82,8 @@
 					labelText="Word title"
 					name="wordTitle"
 					placeholder="Enter Word title..."
-				></TextArea>
+					value={title}
+				>{title}</TextArea>
 			</div>
 			<div class="col-12 col-md-6 mt-2">
 				<TextArea
@@ -87,7 +91,8 @@
 					labelText="Word definition"
 					name="wordDefinition"
 					placeholder="Enter Word definition..."
-				></TextArea>
+					value={definition}
+				>{definition}</TextArea>
 			</div>
 		</div>
 		<div class="row mt-4 justify-content-center">

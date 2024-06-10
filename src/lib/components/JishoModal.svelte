@@ -6,6 +6,11 @@
 		AccordionItem,
 		ExpandableTile
 	} from 'carbon-components-svelte';
+	import CreateCard from './Cards/CreateCard.svelte';
+	import { Model } from 'carbon-icons-svelte';
+
+	let createCardTitle = '';
+	let createCardDefinition = '';
 
 	type JishoData = {
 		searchTerm: string;
@@ -46,6 +51,8 @@
 
 	export let jishoData: JishoData;
 	export let addWordDefinition: (wordDefinitionString: string) => void;
+
+	let cardModalOpen = false;
 
 	const openPhrase = () => {
 		if (jishoData.phraseData && jishoData.kanjiData == null) {
@@ -125,15 +132,43 @@
 
 		addWordDefinition(wordDefinitionString);
 	}
+
+	function openCardModal() {
+		createCardTitle = jishoData.searchTerm;
+		if (jishoData.phraseData) {
+			createCardDefinition = jishoData.phraseData.word;
+			if (jishoData.phraseData.reading){
+				createCardDefinition += '\n' + jishoData.phraseData.reading;
+			}
+
+			if (jishoData.phraseData.romaji){
+				createCardDefinition += '\n' + jishoData.phraseData.romaji;
+			}
+
+		} else if (jishoData.kanjiData) {
+			createCardDefinition = jishoData.kanjiData.meaning;			
+		}
+
+		cardModalOpen = true;
+	}
+
 </script>
 
 <Modal
 	open
+	class="jisho-modal"
 	modalHeading="Jisho information, about: {jishoData.searchTerm}"
 	primaryButtonText="Create Word"
+	secondaryButtons={[{
+		text: 'Create Card'},{text: 'Create Word'}]}
 	preventCloseOnClickOutside
-	on:click:button--primary={() => {
-		createWordDefinition();
+	on:click:button--secondary={({detail}) =>{
+		if (detail.text === 'Create Card') {
+			openCardModal();
+		}
+		if (detail.text === 'Create Word') {
+			createWordDefinition();
+		}
 	}}
 >
 	<Accordion align="start">
@@ -313,3 +348,19 @@
 		{/if}
 	</Accordion>
 </Modal>
+{#if cardModalOpen}
+	<Modal
+		open
+		passiveModal
+		preventCloseOnClickOutside
+		modalHeading="Create Card"
+		primaryButtonText="Create Card"
+		secondaryButtonText="Cancel"
+		on:click:button--secondary={() => (cardModalOpen = false)}
+		on:click:button--primary={() => {
+			
+		}}
+	>
+		<CreateCard title={createCardTitle} definition={createCardDefinition} />
+	</Modal>
+{/if}

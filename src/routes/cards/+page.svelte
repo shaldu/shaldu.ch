@@ -3,6 +3,7 @@
     import Notebook from "carbon-icons-svelte/lib/Notebook.svelte";
     import Edit from "carbon-icons-svelte/lib/Edit.svelte";
 	import CreateCard from '$lib/components/Cards/CreateCard.svelte';
+	import LearnCard from '$lib/components/Cards/LearnCard.svelte';
 
 	let showCardsContentPanel: boolean = true;
 
@@ -40,8 +41,8 @@
 			</div>
             <div class="col">
                 {#if showCardsContentPanel}
-                    <div class="card-box">
-                        lol
+                    <div class="card-box h-100">
+                        <LearnCard />
                     </div>
                 {:else}
                     <div class="card-box">

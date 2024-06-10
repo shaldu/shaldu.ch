@@ -11,7 +11,8 @@
 	import { onMount } from 'svelte';
 	import JishoModal from './JishoModal.svelte';
 	import WordCollectionModal from './WordCollectionModal.svelte';
-	
+	import CreateCard from './Cards/CreateCard.svelte';
+
 	type CustomContextMenuProps = {
 		selectedText: string;
 		page: number;
@@ -34,6 +35,9 @@
 	}
 
 	let bookmarkModalRef: null | any = null;
+	let cardModalRef: null | any = null;
+
+	let cardModalOpen = false;
 	let bookmarkPromptShow = false;
 
 	function bookMarkPrompt() {
@@ -54,7 +58,6 @@
 			bookmarkDescription,
 			pdfFileId: customContextMenuProps.pdfFileId,
 			page: customContextMenuProps.page
-			
 		};
 
 		await fetch(url, {
@@ -102,8 +105,12 @@
 	}
 
 	async function addWordDefinitionFromJisho(wordDefinitionString: string) {
-		wordDefinition = wordDefinitionString;		
-		wordCollectionPromptShow = true;		
+		wordDefinition = wordDefinitionString;
+		wordCollectionPromptShow = true;
+	}
+
+	async function createCard() {
+		cardModalOpen = true;
 	}
 
 	detectJapaneseSelection();
@@ -148,8 +155,33 @@
 	</Modal>
 {/if}
 
+{#if cardModalOpen}
+	<Modal
+		passiveModal
+		bind:this={cardModalRef}
+		bind:open={cardModalOpen}
+		modalHeading="Create Card"
+		primaryButtonText="Create"
+		secondaryButtonText="Cancel"
+		on:click:button--secondary={() => (cardModalOpen = false)}
+		on:click:button--primary={(e) => {
+
+		}}
+		on:open
+		on:close
+		on:submit
+	>
+		<CreateCard />
+	</Modal>
+{/if}
+
 {#if wordCollectionPromptShow}
-	<WordCollectionModal title={customContextMenuProps.selectedText} closeModal={closeWordCollectionModal} page={customContextMenuProps.page} definition={wordDefinition} />
+	<WordCollectionModal
+		title={customContextMenuProps.selectedText}
+		closeModal={closeWordCollectionModal}
+		page={customContextMenuProps.page}
+		definition={wordDefinition}
+	/>
 {/if}
 
 <ContextMenu {open} x={customContextMenuProps.position.x} y={customContextMenuProps.position.y}>
@@ -166,4 +198,5 @@
 	<ContextMenuDivider />
 	<ContextMenuOption indented labelText="Add Bookmark" on:click={bookMarkPrompt} />
 	<ContextMenuOption indented labelText="Create Word" on:click={wordCollectionPrompt} />
+	<ContextMenuOption indented labelText="Create Card" on:click={createCard} />
 </ContextMenu>
