@@ -32,6 +32,16 @@ export async function GET({ request, locals, url }) {
         cards = getRandomCard(cards);
     }
 
+    if (mode === 'hard') {
+        cards = await prisma.cards.findMany({
+            where: {
+                accountId,
+                repeats: 0
+            }
+        });
+        cards = getRandomCard(cards);
+    }
+
     return json(cards);
 }
 
@@ -61,6 +71,52 @@ export async function DELETE({ params, locals, url }) {
             id: cardId
         }
     });
+
+    return json({ message: 'success' });
+}
+
+export async function PUT({ request, locals, url }) {
+
+    // get the session
+    const session = await locals.getSession() as CustomSession;
+    if (session === undefined || session.account === undefined) {
+        return json({ message: 'Unauthorized' });
+    }
+
+    const accountId = session.account.id;
+    const data = await request.json();
+    const { cardId, result } = data;
+
+    if (!cardId || result === undefined) {
+        return json({ message: 'Invalid data' });
+    }
+
+    //TODO: calculate new knowledge score
+
+    //where cardId = cardId and accountId = accountId
+    //and accountId = accountId
+    const card = await prisma.cards.updateMany({
+        
+        where: {
+            AND: [
+				{ id: cardId },
+				{ accountId: accountId }
+			]
+        },
+
+        //update repeats do +1
+        data: {
+            repeats: {
+                increment: 1
+            },
+            knowledgeScore: {
+                increment: 1
+            }
+        }
+    });
+
+    
+    
 
     return json({ message: 'success' });
 }
