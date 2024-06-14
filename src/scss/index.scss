@@ -549,7 +549,8 @@ iframe {
             
         }
         .header {
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
         }
         .footer, .header {
             svg {
@@ -562,7 +563,15 @@ iframe {
         &.card-1 .header {
             pointer-events: none;
         }
+        .isnew {
+            color: #b3cbf3;
+            font-weight: bold;
+        }
+        .score {
+            font-weight: bold;
+        }
         .difficulty {
+            height: 32px;
             display: flex;
             justify-content: space-between;
             display: flex;

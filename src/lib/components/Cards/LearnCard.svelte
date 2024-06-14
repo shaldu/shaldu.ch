@@ -6,8 +6,10 @@
 
 	let fetchCardPromiseEasy = fetchNewCard('easy');
 	let fetchCardPromiseHard = fetchNewCard('hard');
+	let fetchCardPromiseNew = fetchNewCard('new');
+	let fetchCardPromiseAll = fetchNewCard('all');
 
-	let fetchAllCardsPromise = fetchAllCards('all');
+	let fetchAllCardsPromise = fetchAllCards('everything');
 
 	async function fetchNewCard(mode: 'new' | 'easy' | 'hard' | 'all' = 'new') {
 		const url = '/api/auth/cards?mode=' + mode;
@@ -19,14 +21,17 @@
 		});
 
 		if (response.ok) {
-			const data = (await response.json()) as Cards;
+			const responseData = await response.json();
+			const data = responseData.card as Cards;
+
 			return data;
 		} else {
+
 			throw new Error('Failed to fetch new card');
 		}
 	}
 
-	async function fetchAllCards(mode: 'new' | 'easy' | 'hard' | 'all' = 'all') {
+	async function fetchAllCards(mode: 'new' | 'easy' | 'hard' | 'all' | 'everything' = 'everything') {
 		const url = '/api/auth/cards?mode=' + mode;
 		const response = await fetch(url, {
 			method: 'GET',
@@ -36,7 +41,8 @@
 		});
 
 		if (response.ok) {
-			const data = (await response.json()) as Cards[];
+			const responseData = await response.json();
+			const data = responseData.card as Cards[];
 			return data;
 		} else {
 			throw new Error('Failed to fetch new card');
@@ -50,15 +56,18 @@
 		});
 
 		if (response.ok) {
-			fetchAllCardsPromise = fetchAllCards('all');
+			fetchAllCardsPromise = fetchAllCards('everything');
 		} else {
 			console.error('Failed to delete card');
 		}
 	}
 
-	async function cardPutResult(cardId:string, result: 'easy' | 'medium' | 'hard') {
+	async function cardPutResult(card:Card, result: 'easy' | 'medium' | 'hard') {
 		const url = '/api/auth/cards';
-		const data = { cardId, result };
+		const cardId = card.id
+		const knowledgeScore = card.knowledgeScore
+		const repeats = card.repeats
+		const data = { cardId, result, knowledgeScore, repeats};
 		const response = await fetch(url, {
 			method: 'PUT',
 			headers: {
@@ -68,25 +77,32 @@
 		});
 
 		if (response.ok) {
-			console.log('Result put');			
+						
 		} else {
 			console.error('Failed to put result');
 		}
 		
 	}
 
-	const cardFinish = async (cardId: string, result: 'easy' | 'medium' | 'hard', mode: 'new' | 'easy' | 'hard' | 'all') => {
+	const cardFinish = async (card: Card, result: 'easy' | 'medium' | 'hard', mode: 'new' | 'easy' | 'hard' | 'all') => {
 
-		await cardPutResult(cardId, result);
+		await cardPutResult(card, result);
 		newCard(mode);
 	};
 
 	const newCard = (mode: 'new' | 'easy' | 'hard' | 'all') => {
+
 		if (mode == 'easy') {
 			fetchCardPromiseEasy = fetchNewCard(mode);
 		}
 		if (mode == 'hard') {
 			fetchCardPromiseHard = fetchNewCard(mode);
+		}
+		if (mode == 'new') {
+			fetchCardPromiseNew = fetchNewCard(mode);
+		}
+		if (mode == 'all') {
+			fetchCardPromiseAll = fetchNewCard(mode);
 		}
 
 	};
@@ -97,11 +113,23 @@
 		<div class="row justify-content-between h-100">
 			<div class="col-12">
 				<Tabs>
+					<Tab label="All" />
 					<Tab label="Easy" />
 					<Tab label="Hard" />
 					<Tab label="New" />
-					<Tab label="All" />
+					<Tab label="Edit" />
 					<svelte:fragment slot="content">
+						<TabContent>
+							{#await fetchCardPromiseAll}
+								<CardSkeleton />
+							{:then card}
+								{#if card}
+									<Card {card} cardFinished={cardFinish} mode="all" {newCard} />
+								{:else}
+									<p>No cards</p>
+								{/if}
+							{/await}
+						</TabContent>
 						<TabContent>
 							{#await fetchCardPromiseEasy}
 								<CardSkeleton />
@@ -125,7 +153,7 @@
 							{/await}
 						</TabContent>
 						<TabContent>
-							{#await fetchCardPromiseEasy}
+							{#await fetchCardPromiseNew}
 								<CardSkeleton />
 							{:then card}
 								{#if card}

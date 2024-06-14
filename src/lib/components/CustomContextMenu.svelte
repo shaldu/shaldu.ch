@@ -171,7 +171,7 @@
 		on:close
 		on:submit
 	>
-		<CreateCard />
+		<CreateCard title={customContextMenuProps.selectedText} />
 	</Modal>
 {/if}
 

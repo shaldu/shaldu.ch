@@ -15,14 +15,36 @@
     let cardNormal: HTMLElement | null = null;
     let cardFlipped: HTMLElement | null = null;
     let rotaterRef: any | null = null;
+    let score: any | null = null;
 
     let isFlipped: boolean = false;
 
+
+
     onMount(() => {
+        function valueToColor(value: number) {
+            if (value < 0) value = 0;
+            if (value > 100) value = 100;
+
+            // Calculate red and green components
+            let red = Math.round(255 - (value * 2.55));
+            let green = Math.round(value * 2.55);
+
+            // Return the color in RGB format
+            return `rgb(${red}, ${green}, 0)`;
+        }
+        
         if (!parentElm) return;
         cardNormal = parentElm.querySelector('.card-1');
         cardFlipped = parentElm.querySelector('.card-2');
         rotaterRef = parentElm.querySelectorAll('.card .header > div');
+        score = parentElm.querySelectorAll('.card .header .score');
+
+        score.forEach((score:HTMLElement) => {
+            //calculate the score color from 0 - 100 red to green
+            if (card.knowledgeScore <= 0) return;
+            score.style.color = valueToColor(card.knowledgeScore);
+        });
 
         cardNormal?.addEventListener('click', (elm) => {
             
@@ -47,6 +69,13 @@
     <div class="card show card-1">
         <div class="header">
             <div>
+                {#if card.knowledgeScore <= 0}
+                    <span class="isnew">NEW</span>
+                {:else}
+                    <span class="score">{card.knowledgeScore} %</span>
+                {/if}
+            </div>
+            <div>
                 <Rotate />
             </div>
         </div>
@@ -56,11 +85,18 @@
             </div>
         </div>
         <div class="footer">
-            
+            <div class="difficulty"></div>
         </div>
     </div>
     <div class="card card-2">
         <div class="header">
+            <div>
+                {#if card.knowledgeScore <= 0}
+                    <span class="isnew">NEW</span>
+                {:else}
+                    <span class="score">{card.knowledgeScore} %</span>
+                {/if}
+            </div>
             <div>
                 <Rotate />
             </div>
@@ -72,13 +108,13 @@
         </div>
         <div class="footer">
             <div class="difficulty">
-                <Button size="small" kind="secondary" on:click={cardFinished(card.id, 'easy', mode )} class="easy" >Easy</Button>
-                <Button size="small" kind="secondary" on:click={cardFinished(card.id, 'medium', mode )} class="medium">Medium</Button>
-                <Button size="small" kind="secondary" on:click={cardFinished(card.id, 'hard', mode )} class="hard">Hard</Button>                
+                <Button size="small" kind="secondary" on:click={cardFinished(card, 'easy', mode )} class="easy" >Easy</Button>
+                <Button size="small" kind="secondary" on:click={cardFinished(card, 'medium', mode )} class="medium">Medium</Button>
+                <Button size="small" kind="secondary" on:click={cardFinished(card, 'hard', mode )} class="hard">Hard</Button>                
             </div>
         </div>
     </div>
-    {#if isFlipped }
-        <Button on:click={newCard(mode)} kind="primary" class="new" >New card</Button>
-    {/if}
+ 
+    <Button on:click={newCard(mode)} kind="primary" class="new" >New card</Button>
+
 </div>
