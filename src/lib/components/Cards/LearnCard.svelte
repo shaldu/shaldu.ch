@@ -168,18 +168,20 @@
 								<p>Loading...</p>
 							{:then cards}
 								{#if cards}
-									{#each cards as card}
-										<!-- edit cards here with delete possability -->
-										<div class="card mb-2">
-											<div class="card-body">
-												<h5 class="card-title">{card.title}</h5>
-												<p class="card-text">{card.definition}</p>
-												<button class="btn btn-danger" on:click={() => deleteCard(card.id)}
-													>Delete</button
-												>
+									<div class="cord-collection-list">
+										{#each cards as card}
+											<!-- edit cards here with delete possability -->
+											<div class="card mb-2">
+												<div class="card-body">
+													<h5 class="card-title">{card.title}</h5>
+													<p class="card-text">{card.definition}</p>
+													<button class="btn btn-danger" on:click={() => deleteCard(card.id)}
+														>Delete</button
+													>
+												</div>
 											</div>
-										</div>
-									{/each}
+										{/each}
+									</div>
 								{:else}
 									<p>No cards</p>
 								{/if}

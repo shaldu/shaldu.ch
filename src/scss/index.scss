@@ -609,3 +609,7 @@ iframe {
         font-weight: bold;
     }
 }
+.cord-collection-list {
+    height: calc(100dvh - 200px);
+    overflow-y: auto;
+}
