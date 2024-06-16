@@ -613,3 +613,21 @@ iframe {
     height: calc(100dvh - 200px);
     overflow-y: auto;
 }
+
+.alphabetlearner-wrapper {
+
+    input:focus, input:active {
+        outline: none;
+        
+    }
+
+    .correct {
+        color: #009b0f;
+        border-bottom: #009b0f 1px solid;
+    }
+
+    .incorrect {
+        color: #ff0000;
+        border-bottom: #ff0000 1px solid;
+    }
+}

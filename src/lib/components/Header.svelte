@@ -27,6 +27,7 @@
 			<div class="main-navigation-bar-left">
 				<HeaderNavItem href="/" text="Home" />
 				<HeaderNavItem href="/cards" text="Cards" />
+				<HeaderNavItem href="/alphabet" text="Alphabet" />
 			</div>
 			<div class="main-navigation-bar-right">
 				{#if $sessionStore?.user?.image}
@@ -45,7 +46,7 @@
 			<div class="main-navigation-bar-right">
 				<HeaderNavMenu text="Login">
 					<HeaderNavItem on:click={() => signIn('github')} text="Sign In with Github" />
-					<HeaderNavItem href="/" text="Sign In with Google" />
+					<!-- <HeaderNavItem href="/" text="Sign In with Google" /> -->
 				</HeaderNavMenu>
 			</div>
 		{/if}
