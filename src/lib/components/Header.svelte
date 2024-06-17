@@ -33,7 +33,7 @@
 				{#if $sessionStore?.user?.image}
 					<HeaderNavItem class="mini-user-profile-wrapper" href="/profile">
 						<div class="mini-user-profile">
-							<span><strong>{$sessionStore?.user?.name}</strong></span>
+							<!-- <span><strong>{$sessionStore?.user?.name}</strong></span> -->
 							<img src={$sessionStore?.user?.image} alt="avatar" class="avatar" />
 						</div>
 					</HeaderNavItem>

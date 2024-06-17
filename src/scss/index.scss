@@ -631,3 +631,15 @@ iframe {
         border-bottom: #ff0000 1px solid;
     }
 }
+
+
+
+.bx--header__name {
+    display: none !important;
+}
+
+@media screen and (max-width: 767px) {
+    .main-navigation-bar-left a, .main-navigation-bar-right a {
+        padding: 0px 4px;
+    }
+}
