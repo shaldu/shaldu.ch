@@ -33,6 +33,7 @@ async function authorization({ event, resolve }: { event: any; resolve: any }) {
 export const handle: Handle = sequence(
 	SvelteKitAuth({
 		providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+		trustHost: true,
 		callbacks: {
 			signIn: async ({ user }) => {
 

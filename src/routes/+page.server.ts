@@ -4,6 +4,10 @@ import { prisma } from '$db/db';
 import path from 'path';
 import fs from 'fs';
 import { writeFile } from 'fs/promises';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const actions = {
     createCollection: async (event) => {
@@ -77,8 +81,21 @@ export const actions = {
         const filenNameCleaned = fileName.replace(/[^a-zA-Z0-9]/g, '_');
 
         const crpytoUrl = crypto.randomUUID() as string
+        const filePathUrl = path.join(
+            __dirname,
+            '..',
+            '..',
+            '..',
+            'media',
+            'files',
+            crpytoUrl,
+        )
         const filePath = path.join(
-            process.cwd(),
+            __dirname,
+            '..',
+            '..',
+            '..',
+            'static',
             'media',
             'files',
             crpytoUrl,
@@ -86,16 +103,17 @@ export const actions = {
 
         fs.mkdirSync(path.dirname(filePath + "/filler"), { recursive: true  });
         let fileNamePath = `${filePath}/${filenNameCleaned}.pdf`;
+        let fileNamePathUrl = `${filePathUrl}/${filenNameCleaned}.pdf`;
         await writeFile(fileNamePath, file.stream());
         
         //split  process.cwd() to get the relative path to the media folder
-        fileNamePath = fileNamePath.split(process.cwd())[1];
+        fileNamePathUrl = fileNamePathUrl.split(process.cwd())[1];
         
         const fileCollection = await prisma.pdfFile.create({
             data: {
                 title: fileName as string,
                 accountId: accountId,
-                path: fileNamePath,
+                path: fileNamePathUrl,
                 progress: 0,
                 learnCollection: {
                     connect: {
